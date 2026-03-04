@@ -46,9 +46,7 @@ const softwareApplicationSchema = {
 export default function MarkdownEditorOnlinePage() {
   return (
     <>
-      <head>
-        <JsonLd data={softwareApplicationSchema} />
-      </head>
+      <JsonLd data={softwareApplicationSchema} />
 
       <Streamdown>{page?.content || ""}</Streamdown>
 

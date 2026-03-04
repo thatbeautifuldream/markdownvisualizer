@@ -34,9 +34,7 @@ const articleSchema = {
 export default function MonacoEditorPage() {
   return (
     <>
-      <head>
-        <JsonLd data={articleSchema} />
-      </head>
+      <JsonLd data={articleSchema} />
 
       <Streamdown>{page?.content || ""}</Streamdown>
 

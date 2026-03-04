@@ -41,9 +41,7 @@ const howToSchema = {
 export default function MarkdownPreviewPage() {
   return (
     <>
-      <head>
-        <JsonLd data={howToSchema} />
-      </head>
+      <JsonLd data={howToSchema} />
 
       <Streamdown>{page?.content || ""}</Streamdown>
 

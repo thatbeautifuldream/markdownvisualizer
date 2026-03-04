@@ -66,9 +66,7 @@ const faqSchema = {
 export default function MarkdownGuidePage() {
   return (
     <>
-      <head>
-        <JsonLd data={faqSchema} />
-      </head>
+      <JsonLd data={faqSchema} />
 
       <Streamdown>{page?.content || ""}</Streamdown>
 
