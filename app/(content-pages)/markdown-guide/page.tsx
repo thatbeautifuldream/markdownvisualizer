@@ -3,6 +3,8 @@ import { createMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { allPages } from "content-collections";
 import { Streamdown } from "streamdown";
+import { code } from "@streamdown/code";
+import { mermaid } from "@streamdown/mermaid";
 
 const page = allPages.find((p) => p.slug === "markdown-guide");
 
@@ -68,7 +70,7 @@ export default function MarkdownGuidePage() {
     <>
       <JsonLd data={faqSchema} />
 
-      <Streamdown>{page?.content || ""}</Streamdown>
+      <Streamdown plugins={{ code, mermaid }}>{page?.content || ""}</Streamdown>
 
       <section className="bg-muted/50 p-8 rounded-lg mt-12">
         <h2 className="text-3xl font-bold mb-4">Ready to Write?</h2>
