@@ -1,6 +1,8 @@
 ---
 title: Monaco Editor - Professional Markdown Editing
 description: Markdown Visualizer uses Monaco Editor, the same editor that powers VS Code. Experience professional syntax highlighting, auto-indentation, and keyboard shortcuts for markdown editing.
+category: Editor
+date: 2026-03-04
 ---
 
 # Monaco Editor: Professional Markdown Editing

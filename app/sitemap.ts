@@ -64,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const contentSitemap: MetadataRoute.Sitemap = allPages.map((page) => ({
-    url: `${baseUrl}/${page.slug}`,
+    url: `${baseUrl}/blog/${page.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.7,

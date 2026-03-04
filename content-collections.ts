@@ -9,6 +9,8 @@ const pages = defineCollection({
     title: z.string(),
     description: z.string(),
     content: z.string(),
+    category: z.string(),
+    date: z.string(),
   }),
   transform: (document) => {
     return {

@@ -1,6 +1,8 @@
 ---
 title: Markdown Preview - Real-Time Rendering
 description: Preview your markdown instantly with real-time rendering. Supports GitHub Flavored Markdown, code syntax highlighting, tables, task lists, and more. Free, no registration required.
+category: Preview
+date: 2026-03-04
 ---
 
 # Markdown Preview: Real-Time Rendering

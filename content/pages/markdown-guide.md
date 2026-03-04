@@ -1,6 +1,8 @@
 ---
 title: Complete Markdown Guide
 description: Master markdown syntax from basics to advanced techniques. Reference for creating beautiful, structured documents with clear examples and best practices.
+category: Guide
+date: 2026-03-05
 ---
 
 # Complete Markdown Guide
