@@ -1,0 +1,69 @@
+"use client";
+
+import { Coffee } from "lucide-react";
+import { forwardRef } from "react";
+import NumberFlow from "@number-flow/react";
+import Link from "next/link";
+import { siteConfig } from "@/lib/config";
+import type { TMarkdownStats } from "@/stores/markdown-document-store";
+
+const formatSize = (bytes: number): { number: number; unit: string } => {
+	if (bytes === 0) return { number: 0, unit: "B" };
+	const k = 1024;
+	const sizes = ["B", "KB", "MB", "GB"];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	return {
+		number: parseFloat((bytes / k ** i).toFixed(1)),
+		unit: sizes[i],
+	};
+};
+
+type TStatusBarProps = {
+	stats: TMarkdownStats;
+	hasContent: boolean;
+};
+
+export const StatusBar = forwardRef<HTMLDivElement, TStatusBarProps>(
+	({ stats, hasContent }, ref) => {
+		return (
+			<div
+				ref={ref}
+				className="bg-white dark:bg-black text-foreground border-t border px-3 py-1 text-xs flex items-center justify-between"
+			>
+				<div className="flex items-center gap-4">
+					<Link
+						href={siteConfig.links.sponsor}
+						target="_blank"
+						className="hover:text-muted-foreground transition-colors flex items-center gap-1"
+					>
+						<Coffee size={12} />
+						Buy me a Chai
+					</Link>
+				</div>
+				<div className="flex items-center gap-4">
+					<span
+						className="hover:bg-muted transition-colors cursor-default tabular-nums"
+						title="Lines"
+					>
+						L: <NumberFlow value={stats.lines} />
+					</span>{" "}
+					<span
+						className="hover:bg-muted transition-colors cursor-default tabular-nums"
+						title="Characters"
+					>
+						C: <NumberFlow value={stats.characters} />
+					</span>{" "}
+					<span
+						className="hover:bg-muted transition-colors cursor-default tabular-nums"
+						title="Size"
+					>
+						S: <NumberFlow value={formatSize(stats.size).number} />{" "}
+						{formatSize(stats.size).unit}
+					</span>
+				</div>
+			</div>
+		);
+	},
+);
+
+StatusBar.displayName = "StatusBar";
