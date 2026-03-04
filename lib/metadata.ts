@@ -5,6 +5,7 @@ type MetadataGenerator = Omit<Metadata, "description" | "title"> & {
   title: string;
   description: string;
   image?: string;
+  canonical?: string;
 };
 
 const applicationName = "Markdown Visualizer";
@@ -19,6 +20,7 @@ export const createMetadata = ({
   title,
   description,
   image,
+  canonical,
   ...properties
 }: MetadataGenerator): Metadata => {
   const parsedTitle = `${title} | ${applicationName}`;
@@ -69,6 +71,12 @@ export const createMetadata = ({
   };
 
   const metadata: Metadata = merge(defaultMetadata, properties);
+
+  if (canonical) {
+    metadata.alternates = {
+      canonical,
+    };
+  }
 
   return metadata;
 };

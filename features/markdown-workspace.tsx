@@ -63,6 +63,16 @@ export function MarkdownWorkspace() {
 		[],
 	);
 
+	useEffect(() => {
+		return () => {
+			if (editorRef.current) {
+				editorRef.current.dispose();
+				editorRef.current = null;
+			}
+			monacoRef.current = null;
+		};
+	}, []);
+
 	const copyToClipboard = useCallback(async () => {
 		if (!editorRef.current) return;
 

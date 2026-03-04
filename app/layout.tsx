@@ -1,6 +1,7 @@
 import { ClarityProvider } from "@/components/providers/clarity-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
+import { JsonLd } from "@/components/json-ld";
 import { env } from "@/env";
 import { createMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
@@ -18,10 +19,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const softwareApplicationSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Markdown Visualizer",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+  },
+  "featureList": [
+    "Live Markdown Preview",
+    "Monaco Editor Syntax Highlighting",
+    "Dark/Light Theme",
+    "Session Storage Persistence",
+    "Real-time Statistics",
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Milind Mishra",
+    "url": "https://milindmishra.com/",
+  },
+};
+
 export const metadata = createMetadata({
-  title: "Markdown Visualizer",
+  title: "Markdown Visualizer - Free Online Markdown Editor with Live Preview",
   description:
-    "Edit and preview Markdown with ease. A powerful tool for developers to write and preview Markdown documents with an intuitive interface.",
+    "Write and preview Markdown in real-time. A free, no-registration markdown editor with Monaco syntax highlighting, dark mode, and instant preview. Perfect for developers, writers, and students.",
+  canonical: "https://markdownvisualizer.com",
 });
 
 export default function RootLayout({
@@ -31,9 +58,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <JsonLd data={softwareApplicationSchema} />
+      </head>
       <body
         className={cn(
-          `antialiased h-screen overflow-hidden`,
+          `antialiased min-h-screen bg-background text-foreground`,
           geist.className,
           geistMono.variable,
         )}
@@ -44,7 +74,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="h-full flex flex-col">{children}</div>
+          <div className="h-full flex flex-col">
+            {children}
+          </div>
           <ToasterProvider />
         </ThemeProvider>
         <ClarityProvider />

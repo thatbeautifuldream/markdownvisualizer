@@ -40,6 +40,9 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@content-collections/core": "^0.14.2",
+    "@content-collections/markdown": "^0.1.4",
+    "@content-collections/next": "^0.2.11",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
