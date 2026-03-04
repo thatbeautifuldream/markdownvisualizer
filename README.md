@@ -1,5 +1,7 @@
 # Markdown Visualizer
 
+![opengraph-image](https://github.com/user-attachments/assets/b866bf4b-2d5d-4742-8942-9fadd453c9f0)
+
 A web-based Markdown editor with live preview. Write Markdown and see the rendered output in real-time.
 
 ## Features
