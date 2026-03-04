@@ -8,4 +8,5 @@ export const siteConfig = {
   },
   owner: "thatbeautifuldream",
   repo: "markdownvisualizer",
+  website: "https://markdownvisualizer.com",
 };
