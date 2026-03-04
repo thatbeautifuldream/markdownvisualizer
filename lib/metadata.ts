@@ -45,7 +45,7 @@ export const createMetadata = ({
       locale: "en_US",
       images: [
         {
-          url: "https://dqy38fnwh4fqs.cloudfront.net/scroll/UHDNGKG7BMJ8PKPFNLPRDDRNOAG7-1753640125899",
+          url: "https://cdn.milind.app/media/og/markdown-visualiszer.webp",
           width: 1200,
           height: 630,
         },
@@ -60,7 +60,7 @@ export const createMetadata = ({
       creator: twitterHandle,
       images: [
         {
-          url: "https://dqy38fnwh4fqs.cloudfront.net/scroll/UHDNGKG7BMJ8PKPFNLPRDDRNOAG7-1753640125899",
+          url: "https://cdn.milind.app/media/og/markdown-visualiszer.webp",
           width: 1200,
           height: 630,
         },
