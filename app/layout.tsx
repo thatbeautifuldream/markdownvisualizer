@@ -1,8 +1,7 @@
+import { JsonLd } from "@/components/json-ld";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
-import { JsonLd } from "@/components/json-ld";
-import { env } from "@/env";
 import { createMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -21,25 +20,25 @@ const geistMono = Geist_Mono({
 const softwareApplicationSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Markdown Visualizer",
-  "applicationCategory": "DeveloperApplication",
-  "operatingSystem": "Web Browser",
-  "offers": {
+  name: "Markdown Visualizer",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Web Browser",
+  offers: {
     "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD",
+    price: "0",
+    priceCurrency: "USD",
   },
-  "featureList": [
+  featureList: [
     "Live Markdown Preview",
     "Monaco Editor Syntax Highlighting",
     "Dark/Light Theme",
     "Session Storage Persistence",
     "Real-time Statistics",
   ],
-  "author": {
+  author: {
     "@type": "Person",
-    "name": "Milind Mishra",
-    "url": "https://milindmishra.com/",
+    name: "Milind Mishra",
+    url: "https://milindmishra.com/",
   },
 };
 
@@ -73,9 +72,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="h-full flex flex-col">
-            {children}
-          </div>
+          <div className="h-full flex flex-col">{children}</div>
           <ToasterProvider />
         </ThemeProvider>
         <AnalyticsProvider />
