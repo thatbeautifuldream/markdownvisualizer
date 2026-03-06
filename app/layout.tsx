@@ -1,11 +1,10 @@
-import { ClarityProvider } from "@/components/providers/clarity-provider";
+import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
 import { JsonLd } from "@/components/json-ld";
 import { env } from "@/env";
 import { createMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -79,8 +78,7 @@ export default function RootLayout({
           </div>
           <ToasterProvider />
         </ThemeProvider>
-        <ClarityProvider />
-        <GoogleAnalytics gaId={env.NEXT_PUBLIC_GA_ID} />
+        <AnalyticsProvider />
       </body>
     </html>
   );

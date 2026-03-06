@@ -1,5 +1,3 @@
-"use client";
-
 import { MarkdownWorkspace } from "@/features/markdown-workspace";
 
 export default function Page() {
