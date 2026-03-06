@@ -77,9 +77,9 @@ export default async function BlogPage({
     <>
       <JsonLd data={articleSchema} />
 
-      <div className="bg-background py-24 sm:py-32">
+      <div className="bg-background py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto">
             <article>
               <header className="mb-8 pb-8 border-b border-border">
                 <div className="flex flex-col gap-6">
