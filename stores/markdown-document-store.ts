@@ -1,8 +1,10 @@
 "use client";
 
 import { create } from "zustand";
+import { indexedDBService } from "@/lib/markdown-storage-service";
 
-const STORAGE_KEY = "markdown-visualizer-content";
+const LEGACY_SESSION_STORAGE_KEY = "markdown-visualizer-content";
+const STALE_TABS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type TMarkdownStats = {
   lines: number;
@@ -15,7 +17,7 @@ export type TMarkdownStore = {
   setMarkdownContent: (content: string) => void;
   saveMarkdown: (content: string) => void;
   clearMarkdown: () => void;
-  loadFromSessionStorage: () => void;
+  loadFromIndexedDB: () => Promise<void>;
   getStats: () => TMarkdownStats;
   hasContent: () => boolean;
 };
@@ -33,25 +35,54 @@ export const useMarkdownStore = create<TMarkdownStore>((set, get) => ({
   saveMarkdown: (content: string) => {
     set({ markdownContent: content });
     statsCache.clear();
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem(STORAGE_KEY, content);
-    }
+    if (typeof window === "undefined") return;
+
+    void (async () => {
+      try {
+        const tabId = await indexedDBService.getOrCreateTabId();
+        await indexedDBService.saveTabState(tabId, content);
+      } catch (error) {
+        console.error("Failed to save markdown content to IndexedDB", error);
+      }
+    })();
   },
 
   clearMarkdown: () => {
     set({ markdownContent: "" });
     statsCache.clear();
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem(STORAGE_KEY);
-    }
+    if (typeof window === "undefined") return;
+
+    void (async () => {
+      try {
+        const tabId = await indexedDBService.getOrCreateTabId();
+        await indexedDBService.deleteTabState(tabId);
+      } catch (error) {
+        console.error("Failed to clear markdown content from IndexedDB", error);
+      }
+    })();
   },
 
-  loadFromSessionStorage: () => {
-    if (typeof window !== "undefined") {
-      const saved = sessionStorage.getItem(STORAGE_KEY);
-      if (saved !== null) {
-        set({ markdownContent: saved });
-      }
+  loadFromIndexedDB: async () => {
+    if (typeof window === "undefined") return;
+
+    indexedDBService.registerLifecycleCleanup();
+    const tabId = await indexedDBService.getOrCreateTabId();
+    const cutoffMs = Date.now() - STALE_TABS_TTL_MS;
+    void indexedDBService.cleanupStaleTabs(cutoffMs);
+    void indexedDBService.cleanupClosedTabs();
+
+    const persisted = await indexedDBService.getTabState(tabId);
+    if (persisted) {
+      set({ markdownContent: persisted.content });
+      return;
+    }
+
+    // One-time migration from legacy sessionStorage persistence.
+    const legacyContent = sessionStorage.getItem(LEGACY_SESSION_STORAGE_KEY);
+    if (legacyContent !== null) {
+      set({ markdownContent: legacyContent });
+      await indexedDBService.saveTabState(tabId, legacyContent);
+      sessionStorage.removeItem(LEGACY_SESSION_STORAGE_KEY);
     }
   },
 
