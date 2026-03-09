@@ -38,8 +38,12 @@ export const useMarkdownStore = create<TMarkdownStore>((set, get) => ({
     if (typeof window === "undefined") return;
 
     void (async () => {
-      const tabId = await indexedDBService.getOrCreateTabId();
-      await indexedDBService.saveTabState(tabId, content);
+      try {
+        const tabId = await indexedDBService.getOrCreateTabId();
+        await indexedDBService.saveTabState(tabId, content);
+      } catch (error) {
+        console.error("Failed to save markdown content to IndexedDB", error);
+      }
     })();
   },
 
@@ -49,8 +53,12 @@ export const useMarkdownStore = create<TMarkdownStore>((set, get) => ({
     if (typeof window === "undefined") return;
 
     void (async () => {
-      const tabId = await indexedDBService.getOrCreateTabId();
-      await indexedDBService.deleteTabState(tabId);
+      try {
+        const tabId = await indexedDBService.getOrCreateTabId();
+        await indexedDBService.deleteTabState(tabId);
+      } catch (error) {
+        console.error("Failed to clear markdown content from IndexedDB", error);
+      }
     })();
   },
 
