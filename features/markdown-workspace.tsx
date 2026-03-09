@@ -41,13 +41,13 @@ export function MarkdownWorkspace() {
   const setMarkdownContent = useMarkdownStore(
     (state) => state.setMarkdownContent,
   );
-  const loadFromSessionStorage = useMarkdownStore(
-    (state) => state.loadFromSessionStorage,
+  const loadFromIndexedDB = useMarkdownStore(
+    (state) => state.loadFromIndexedDB,
   );
 
   useEffect(() => {
-    loadFromSessionStorage();
-  }, [loadFromSessionStorage]);
+    void loadFromIndexedDB();
+  }, [loadFromIndexedDB]);
 
   useEffect(() => {
     if (editorRef.current && editorRef.current.getValue() !== markdownContent) {
