@@ -4,7 +4,7 @@ import Link from "next/link";
 import { StreamdownWrapper } from "@/components/streamdown-wrapper";
 import { createMetadata } from "@/lib/metadata";
 import { JsonLd } from "@/components/json-ld";
-import { Button } from "@/components/ui/button";
+import { EditorCta } from "@/features/editor-cta";
 
 export async function generateStaticParams() {
   return allPages.map((page) => ({
@@ -77,77 +77,56 @@ export default async function BlogPage({
     <>
       <JsonLd data={articleSchema} />
 
-      <div className="bg-background py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto">
-            <article>
-              <header className="mb-8 pb-8 border-b border-border">
-                <div className="flex flex-col gap-6">
-                  <div>
-                    <Link
-                      href={`/blog?category=${page.category.toLowerCase()}`}
-                      className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/20"
-                    >
-                      {page.category}
-                    </Link>
-                  </div>
+      <div className="py-10 sm:py-14">
+        <article className="pb-12">
+          <header className="pb-10 sm:pb-12">
+            <Link
+              href="/blog"
+              className="inline-flex text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Back to blog
+            </Link>
 
-                  <h1 className="text-4xl font-semibold tracking-tight text-pretty text-foreground sm:text-5xl">
-                    {page.title}
-                  </h1>
+            <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+              <Link
+                href={`/blog?category=${page.category.toLowerCase()}`}
+                className="inline-flex rounded-full bg-muted/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors hover:bg-muted hover:text-foreground"
+              >
+                {page.category}
+              </Link>
+              <span className="hidden sm:inline">/</span>
+              <time dateTime={page.date}>{formatDate(page.date)}</time>
+            </div>
 
-                  <div className="flex items-center gap-x-4">
-                    <img
-                      alt={author.name}
-                      src={author.imageUrl}
-                      className="size-10 rounded-full bg-muted"
-                    />
-                    <div className="text-sm">
-                      <p className="font-semibold text-foreground">
-                        <Link href={author.href} className="hover:text-primary">
-                          {author.name}
-                        </Link>
-                      </p>
-                      <p className="text-muted-foreground">{author.role}</p>
-                    </div>
-                    <div className="flex items-center gap-x-2 ml-auto">
-                      <time
-                        dateTime={page.date}
-                        className="text-sm text-muted-foreground"
-                      >
-                        {formatDate(page.date)}
-                      </time>
-                    </div>
-                  </div>
-                </div>
-              </header>
+            <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+              {page.title}
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+              {page.description}
+            </p>
 
-              <div className="prose prose-gray max-w-none dark:prose-invert">
-                <StreamdownWrapper content={page.content} />
+            <div className="mt-8 flex items-center gap-2 text-xs text-muted-foreground">
+              <img
+                alt={author.name}
+                src={author.imageUrl}
+                className="size-6 rounded-full bg-muted/70"
+              />
+              <div className="flex items-center gap-1.5">
+                <span>{author.name}</span>
+                <span className="text-muted-foreground/60">/</span>
+                <span>{author.role}</span>
               </div>
+            </div>
+          </header>
 
-              <div className="relative isolate overflow-hidden bg-background">
-                <div className="px-6 py-24 sm:py-32 lg:px-8">
-                  <div className="mx-auto max-w-2xl text-center">
-                    <h2 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-                      Try Markdown Visualizer
-                    </h2>
-                    <p className="mx-auto mt-6 max-w-xl text-lg/8 text-pretty">
-                      Practice what you&apos;ve learned with our free online
-                      editor. No registration, instant load, and all the
-                      features you need. ea.
-                    </p>
-                    <div className="mt-10">
-                      <Link href="/">
-                        <Button>Open Editor</Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
+          <div className="mt-10 bg-background px-0 py-2">
+            <div className="prose prose-gray max-w-none dark:prose-invert">
+              <StreamdownWrapper content={page.content} />
+            </div>
           </div>
-        </div>
+
+          <EditorCta />
+        </article>
       </div>
     </>
   );

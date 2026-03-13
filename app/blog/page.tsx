@@ -2,6 +2,8 @@ import { allPages } from "content-collections";
 import Link from "next/link";
 import { createMetadata } from "@/lib/metadata";
 import { JsonLd } from "@/components/json-ld";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const metadata = createMetadata({
   title: "Blog - Markdown Visualizer",
@@ -70,97 +72,98 @@ export default async function BlogPage({
     <>
       <JsonLd data={blogSchema} />
 
-      <div className="bg-background py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto">
-            <h2 className="text-4xl font-semibold tracking-tight text-pretty text-foreground sm:text-5xl">
-              {category
-                ? `${category.charAt(0).toUpperCase() + category.slice(1)} Articles`
-                : "Blog"}
-            </h2>
-            <p className="mt-2 text-lg/8 text-muted-foreground">
-              {category
-                ? `Showing ${filteredPages.length} ${filteredPages.length === 1 ? "post" : "posts"} in ${category} category.`
-                : "Master markdown syntax, Monaco Editor features, and real-time preview with our comprehensive guides."}
-            </p>
-            {category && (
-              <div className="mt-4">
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary/80"
-                >
-                  Back to all posts
-                </Link>
-              </div>
-            )}
-            <div className="mt-10 space-y-16 border-t border-border pt-10 sm:mt-16 sm:pt-16">
-              {filteredPages.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">
-                    No posts found in this category.
-                  </p>
+      <div className="py-10 sm:py-14">
+        <section className="pb-10 sm:pb-12">
+          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+            Blog
+          </p>
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                {category
+                  ? `${category.charAt(0).toUpperCase() + category.slice(1)} Articles`
+                  : "Minimal notes on markdown and writing workflows."}
+              </h1>
+              <p className="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
+                {category
+                  ? `Showing ${filteredPages.length} ${filteredPages.length === 1 ? "post" : "posts"} in ${category}.`
+                  : "Guides on markdown syntax, editor behavior, live preview, and the small UX decisions that make developer tools feel precise."}
+              </p>
+            </div>
+            {category ? (
+              <Link
+                href="/blog"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "w-fit rounded-full border-0 shadow-none",
+                )}
+              >
+                All posts
+              </Link>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="space-y-10 sm:space-y-12">
+          {filteredPages.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="text-muted-foreground">
+                No posts found in this category.
+              </p>
+              <Link
+                href="/blog"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "mt-6 rounded-full border-0 shadow-none",
+                )}
+              >
+                View all posts
+              </Link>
+            </div>
+          ) : (
+            posts.map((post) => (
+              <article
+                key={post.id}
+                className="group grid gap-5 py-2 transition-colors sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-8"
+              >
+                <div className="space-y-3 text-sm text-muted-foreground">
+                  <time dateTime={post.datetime} className="block">
+                    {post.date}
+                  </time>
                   <Link
-                    href="/blog"
-                    className="mt-4 inline-block text-sm font-medium text-primary hover:text-primary/80"
+                    href={post.category.href}
+                    className="inline-flex rounded-full bg-muted/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors hover:bg-muted hover:text-foreground"
                   >
-                    View all posts
+                    {post.category.title}
                   </Link>
                 </div>
-              ) : (
-                posts.map((post) => (
-                  <article
-                    key={post.id}
-                    className="flex flex-col items-start justify-between"
-                  >
-                    <div className="flex items-center gap-x-4 text-xs">
-                      <time
-                        dateTime={post.datetime}
-                        className="text-muted-foreground"
-                      >
-                        {post.date}
-                      </time>
-                      <Link
-                        href={post.category.href}
-                        className="relative z-10 rounded-full bg-muted px-3 py-1.5 font-medium text-muted-foreground hover:bg-muted/80"
-                      >
-                        {post.category.title}
-                      </Link>
+                <div className="relative">
+                  <h2 className="text-2xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-foreground/75">
+                    <Link href={post.href}>
+                      <span className="absolute inset-0" />
+                      {post.title}
+                    </Link>
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                    {post.description}
+                  </p>
+                  <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
+                    <img
+                      alt={post.author.name}
+                      src={post.author.imageUrl}
+                      className="size-6 rounded-full bg-muted/70"
+                    />
+                    <div className="flex items-center gap-1.5">
+                      <span>{post.author.name}</span>
+                      <span className="text-muted-foreground/60">/</span>
+                      <span>{post.author.role}</span>
                     </div>
-                    <div className="group relative">
-                      <h3 className="mt-3 text-lg/6 font-semibold text-foreground group-hover:text-foreground/80">
-                        <Link href={post.href}>
-                          <span className="absolute inset-0" />
-                          {post.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-5 line-clamp-3 text-sm/6 text-muted-foreground">
-                        {post.description}
-                      </p>
-                    </div>
-                    <div className="relative mt-8 flex items-center gap-x-4">
-                      <img
-                        alt=""
-                        src={post.author.imageUrl}
-                        className="size-8 rounded-full bg-muted"
-                      />
-                      <div className="text-sm/6">
-                        <p className="font-semibold text-foreground">
-                          <Link href={post.author.href}>
-                            <span className="absolute inset-0" />
-                            {post.author.name}
-                          </Link>
-                        </p>
-                        <p className="text-muted-foreground">
-                          {post.author.role}
-                        </p>
-                      </div>
-                    </div>
-                  </article>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
+                  </div>
+                </div>
+              </article>
+            ))
+          )}
+        </section>
       </div>
     </>
   );
