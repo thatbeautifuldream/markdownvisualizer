@@ -24,9 +24,16 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { GitHubLink } from "./github-link";
 import { TextMorph } from "torph/react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 type ExpandedPane = "editor" | "preview" | null;
+
+const workspacePaneClassName =
+  "flex h-full min-h-0 flex-col overflow-hidden rounded-lg border bg-background/95";
 
 type PaneHeaderProps = {
   title: string;
@@ -159,6 +166,10 @@ export function MarkdownWorkspace() {
     [],
   );
 
+  const handleDesktopLayoutChange = useCallback(() => {
+    editorRef.current?.layout();
+  }, []);
+
   const tabs = useMemo(() => {
     return [
       {
@@ -208,7 +219,10 @@ export function MarkdownWorkspace() {
 
   const editorPane = useMemo(() => {
     return (
-      <section className="workspace-pane border" aria-label="Markdown editor">
+      <section
+        className={workspacePaneClassName}
+        aria-label="Markdown editor"
+      >
         <PaneHeader
           title="Editor"
           meta={<TextMorph>{isPending ? "Saving" : "Ready"}</TextMorph>}
@@ -241,7 +255,10 @@ export function MarkdownWorkspace() {
 
   const previewPane = useMemo(() => {
     return (
-      <section className="workspace-pane border" aria-label="Markdown preview">
+      <section
+        className={workspacePaneClassName}
+        aria-label="Markdown preview"
+      >
         <PaneHeader
           title="Preview"
           meta="Live render"
@@ -257,7 +274,7 @@ export function MarkdownWorkspace() {
     );
   }, [markdownContent, desktopExpandedPane, togglePaneExpansion]);
 
-  const desktopPanes = useMemo(() => {
+  const desktopContent = useMemo(() => {
     if (desktopExpandedPane === "editor") {
       return editorPane;
     }
@@ -267,12 +284,25 @@ export function MarkdownWorkspace() {
     }
 
     return (
-      <>
-        {editorPane}
-        {previewPane}
-      </>
+      <ResizablePanelGroup
+        orientation="horizontal"
+        onLayoutChange={handleDesktopLayoutChange}
+      >
+        <ResizablePanel defaultSize="52%" minSize="30%">
+          {editorPane}
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize="48%" minSize="30%">
+          {previewPane}
+        </ResizablePanel>
+      </ResizablePanelGroup>
     );
-  }, [desktopExpandedPane, editorPane, previewPane]);
+  }, [
+    desktopExpandedPane,
+    editorPane,
+    previewPane,
+    handleDesktopLayoutChange,
+  ]);
 
   return (
     <div className="h-screen flex flex-col">
@@ -299,23 +329,13 @@ export function MarkdownWorkspace() {
         }
       />
       <div
-        className={cn(
-          "flex-1 min-h-0 overflow-hidden",
-          isMobile ? "p-0" : "p-3",
-        )}
+        className={`flex-1 min-h-0 overflow-hidden ${isMobile ? "p-0" : "p-3"}`}
       >
         {isMobile ? (
           activeTabContent
         ) : (
-          <div className="workspace-shell h-full">
-            <div
-              className={cn(
-                "workspace-panels h-full",
-                desktopExpandedPane && "workspace-panels-expanded",
-              )}
-            >
-              {desktopPanes}
-            </div>
+          <div className="h-full [container-type:inline-size]">
+            <div className="h-full">{desktopContent}</div>
           </div>
         )}
       </div>
