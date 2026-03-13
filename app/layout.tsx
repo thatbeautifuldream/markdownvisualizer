@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/json-ld";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { createMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -72,8 +73,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="h-full flex flex-col">{children}</div>
-          <ToasterProvider />
+          <TooltipProvider>
+            <div className="h-full flex flex-col">{children}</div>
+            <ToasterProvider />
+          </TooltipProvider>
         </ThemeProvider>
         <AnalyticsProvider />
       </body>

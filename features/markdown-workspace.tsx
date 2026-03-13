@@ -13,7 +13,7 @@ import {
   useTransition,
 } from "react";
 import { toast } from "sonner";
-import { Expand, Minimize2 } from "lucide-react";
+import { Maximize2Icon, Minimize2 } from "lucide-react";
 import { WorkspaceHeader } from "./workspace-header";
 import { EditorToolbar } from "./editor-toolbar";
 import { MarkdownEditor } from "./markdown-editor";
@@ -29,6 +29,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type ExpandedPane = "editor" | "preview" | null;
 
@@ -58,15 +63,26 @@ function PaneHeader({
       <span>{title}</span>
       <div className="flex items-center gap-1">
         <span>{meta}</span>
-        <button
-          type="button"
-          aria-label={label}
-          title={label}
-          onClick={() => onToggleExpand(paneId)}
-          className="inline-flex size-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-        >
-          {isExpanded ? <Minimize2 size={14} /> : <Expand size={14} />}
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              aria-label={label}
+              title={label}
+              onClick={() => onToggleExpand(paneId)}
+              className="inline-flex size-6 cursor-pointer items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              {isExpanded ? (
+                <Minimize2 size={14} />
+              ) : (
+                <Maximize2Icon size={14} />
+              )}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" sideOffset={8}>
+            {label}
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
