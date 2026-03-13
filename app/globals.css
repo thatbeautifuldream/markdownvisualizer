@@ -135,6 +135,10 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .workspace-panels.workspace-panels-expanded {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .workspace-pane {
     display: flex;
     min-height: 0;
@@ -147,6 +151,10 @@
   @container workspace (min-width: 72rem) {
     .workspace-panels {
       grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    }
+
+    .workspace-panels.workspace-panels-expanded {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 

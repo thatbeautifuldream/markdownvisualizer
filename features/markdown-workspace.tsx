@@ -4,6 +4,7 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { useTheme } from "next-themes";
 import {
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -12,6 +13,7 @@ import {
   useTransition,
 } from "react";
 import { toast } from "sonner";
+import { Expand, Minimize2 } from "lucide-react";
 import { WorkspaceHeader } from "./workspace-header";
 import { EditorToolbar } from "./editor-toolbar";
 import { MarkdownEditor } from "./markdown-editor";
@@ -24,11 +26,48 @@ import { TextMorph } from "torph/react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
-type EditorTheme = "light" | "hc-black";
+type ExpandedPane = "editor" | "preview" | null;
+
+type PaneHeaderProps = {
+  title: string;
+  meta: ReactNode;
+  paneId: Exclude<ExpandedPane, null>;
+  expandedPane: ExpandedPane;
+  onToggleExpand: (pane: Exclude<ExpandedPane, null>) => void;
+};
+
+function PaneHeader({
+  title,
+  meta,
+  paneId,
+  expandedPane,
+  onToggleExpand,
+}: PaneHeaderProps) {
+  const isExpanded = expandedPane === paneId;
+  const label = isExpanded ? `Collapse ${title}` : `Expand ${title}`;
+
+  return (
+    <div className="flex items-center justify-between border-b px-4 py-2 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+      <span>{title}</span>
+      <div className="flex items-center gap-1">
+        <span>{meta}</span>
+        <button
+          type="button"
+          aria-label={label}
+          title={label}
+          onClick={() => onToggleExpand(paneId)}
+          className="inline-flex size-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          {isExpanded ? <Minimize2 size={14} /> : <Expand size={14} />}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function MarkdownWorkspace() {
-  const [editorTheme, setEditorTheme] = useState<EditorTheme>("hc-black");
   const [activeTab, setActiveTab] = useState("editor");
+  const [expandedPane, setExpandedPane] = useState<ExpandedPane>(null);
   const [isPending, startTransition] = useTransition();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
@@ -36,6 +75,8 @@ export function MarkdownWorkspace() {
   const isMobile = useIsMobile();
 
   const { theme: appTheme } = useTheme();
+  const editorTheme = appTheme === "dark" ? "hc-black" : "light";
+  const desktopExpandedPane = isMobile ? null : expandedPane;
 
   const stats = useMarkdownStore((state) => state.getStats());
   const hasContent = useMarkdownStore((state) => state.hasContent());
@@ -108,12 +149,15 @@ export function MarkdownWorkspace() {
   }, [clearMarkdown]);
 
   useEffect(() => {
-    if (appTheme === "dark") {
-      setEditorTheme("hc-black");
-    } else {
-      setEditorTheme("light");
-    }
-  }, [appTheme]);
+    editorRef.current?.layout();
+  }, [desktopExpandedPane]);
+
+  const togglePaneExpansion = useCallback(
+    (pane: Exclude<ExpandedPane, null>) => {
+      setExpandedPane((current) => (current === pane ? null : pane));
+    },
+    [],
+  );
 
   const tabs = useMemo(() => {
     return [
@@ -165,10 +209,13 @@ export function MarkdownWorkspace() {
   const editorPane = useMemo(() => {
     return (
       <section className="workspace-pane border" aria-label="Markdown editor">
-        <div className="flex items-center justify-between border-b px-4 py-2 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
-          <span>Editor</span>
-          <TextMorph>{isPending ? "Saving" : "Ready"}</TextMorph>
-        </div>
+        <PaneHeader
+          title="Editor"
+          meta={<TextMorph>{isPending ? "Saving" : "Ready"}</TextMorph>}
+          paneId="editor"
+          expandedPane={desktopExpandedPane}
+          onToggleExpand={togglePaneExpansion}
+        />
         <div className="flex-1 min-h-0">
           <MarkdownEditor
             value={markdownContent}
@@ -188,22 +235,44 @@ export function MarkdownWorkspace() {
     isPending,
     stats,
     hasContent,
+    desktopExpandedPane,
+    togglePaneExpansion,
   ]);
 
   const previewPane = useMemo(() => {
     return (
       <section className="workspace-pane border" aria-label="Markdown preview">
-        <div className="flex items-center justify-between border-b px-4 py-2 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
-          <span>Preview</span>
-          <span>Live render</span>
-        </div>
+        <PaneHeader
+          title="Preview"
+          meta="Live render"
+          paneId="preview"
+          expandedPane={desktopExpandedPane}
+          onToggleExpand={togglePaneExpansion}
+        />
         <MarkdownPreview
           content={markdownContent}
           className="flex-1 min-h-0 px-4 py-4 md:p-6"
         />
       </section>
     );
-  }, [markdownContent]);
+  }, [markdownContent, desktopExpandedPane, togglePaneExpansion]);
+
+  const desktopPanes = useMemo(() => {
+    if (desktopExpandedPane === "editor") {
+      return editorPane;
+    }
+
+    if (desktopExpandedPane === "preview") {
+      return previewPane;
+    }
+
+    return (
+      <>
+        {editorPane}
+        {previewPane}
+      </>
+    );
+  }, [desktopExpandedPane, editorPane, previewPane]);
 
   return (
     <div className="h-screen flex flex-col">
@@ -239,9 +308,13 @@ export function MarkdownWorkspace() {
           activeTabContent
         ) : (
           <div className="workspace-shell h-full">
-            <div className="workspace-panels h-full">
-              {editorPane}
-              {previewPane}
+            <div
+              className={cn(
+                "workspace-panels h-full",
+                desktopExpandedPane && "workspace-panels-expanded",
+              )}
+            >
+              {desktopPanes}
             </div>
           </div>
         )}
