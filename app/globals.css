@@ -124,6 +124,32 @@
 }
 
 @layer utilities {
+  .workspace-shell {
+    container-type: inline-size;
+    container-name: workspace;
+  }
+
+  .workspace-panels {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspace-pane {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: color-mix(in oklch, var(--background) 94%, var(--foreground) 6%);
+  }
+
+  @container workspace (min-width: 72rem) {
+    .workspace-panels {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    }
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
