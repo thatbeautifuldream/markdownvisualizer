@@ -4,13 +4,11 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { useTheme } from "next-themes";
 import {
-  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  useTransition,
 } from "react";
 import { toast } from "sonner";
 import { Maximize2Icon, Minimize2 } from "lucide-react";
@@ -22,7 +20,6 @@ import { StatusBar } from "./status-bar";
 import { useMarkdownStore } from "@/stores/markdown-document-store";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { GitHubLink } from "./github-link";
-import { TextMorph } from "torph/react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ResizableHandle,
@@ -42,7 +39,6 @@ const workspacePaneClassName =
 
 type PaneHeaderProps = {
   title: string;
-  meta: ReactNode;
   paneId: Exclude<ExpandedPane, null>;
   expandedPane: ExpandedPane;
   onToggleExpand: (pane: Exclude<ExpandedPane, null>) => void;
@@ -50,7 +46,6 @@ type PaneHeaderProps = {
 
 function PaneHeader({
   title,
-  meta,
   paneId,
   expandedPane,
   onToggleExpand,
@@ -61,8 +56,7 @@ function PaneHeader({
   return (
     <div className="flex items-center justify-between border-b px-4 py-2 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
       <span>{title}</span>
-      <div className="flex items-center gap-1">
-        <span>{meta}</span>
+      <div className="flex items-center">
         <Tooltip>
           <TooltipTrigger asChild>
             <button
@@ -91,7 +85,6 @@ function PaneHeader({
 export function MarkdownWorkspace() {
   const [activeTab, setActiveTab] = useState("editor");
   const [expandedPane, setExpandedPane] = useState<ExpandedPane>(null);
-  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const statusBarRef = useRef<HTMLDivElement>(null);
@@ -126,10 +119,8 @@ export function MarkdownWorkspace() {
   const handleEditorChange = useCallback(
     (value: string | undefined) => {
       const newValue = value || "";
-      startTransition(() => {
-        setMarkdownContent(newValue);
-        saveMarkdown(newValue);
-      });
+      setMarkdownContent(newValue);
+      saveMarkdown(newValue);
     },
     [setMarkdownContent, saveMarkdown],
   );
@@ -241,7 +232,6 @@ export function MarkdownWorkspace() {
       >
         <PaneHeader
           title="Editor"
-          meta={<TextMorph>{isPending ? "Saving" : "Ready"}</TextMorph>}
           paneId="editor"
           expandedPane={desktopExpandedPane}
           onToggleExpand={togglePaneExpansion}
@@ -262,7 +252,6 @@ export function MarkdownWorkspace() {
     handleEditorChange,
     handleEditorDidMount,
     editorTheme,
-    isPending,
     stats,
     hasContent,
     desktopExpandedPane,
@@ -277,7 +266,6 @@ export function MarkdownWorkspace() {
       >
         <PaneHeader
           title="Preview"
-          meta="Live render"
           paneId="preview"
           expandedPane={desktopExpandedPane}
           onToggleExpand={togglePaneExpansion}
@@ -321,13 +309,13 @@ export function MarkdownWorkspace() {
   ]);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex h-screen flex-col [container-type:inline-size]">
       <WorkspaceHeader
         tabs={isMobile ? tabs : undefined}
         activeTab={isMobile ? activeTab : undefined}
         onTabChange={isMobile ? setActiveTab : undefined}
         leftActions={
-          <span className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+          <span className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground [@container(max-width:767px)]:hidden">
             Markdown Visualizer
           </span>
         }
@@ -350,7 +338,7 @@ export function MarkdownWorkspace() {
         {isMobile ? (
           activeTabContent
         ) : (
-          <div className="h-full [container-type:inline-size]">
+          <div className="h-full">
             <div className="h-full">{desktopContent}</div>
           </div>
         )}
