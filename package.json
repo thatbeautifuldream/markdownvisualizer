@@ -23,6 +23,7 @@
     "@streamdown/code": "^1.0.3",
     "@streamdown/mermaid": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.13.10",
+    "@tanstack/react-hotkeys": "^0.4.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "deepmerge": "^4.3.1",

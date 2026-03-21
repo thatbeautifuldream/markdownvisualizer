@@ -12,6 +12,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { Maximize2Icon, Minimize2 } from "lucide-react";
+import { useHotkey, formatForDisplay } from "@tanstack/react-hotkeys";
 import { WorkspaceHeader } from "./workspace-header";
 import { EditorToolbar } from "./editor-toolbar";
 import { MarkdownEditor } from "./markdown-editor";
@@ -31,6 +32,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
 type ExpandedPane = "editor" | "preview" | null;
 
@@ -42,6 +44,7 @@ type PaneHeaderProps = {
   paneId: Exclude<ExpandedPane, null>;
   expandedPane: ExpandedPane;
   onToggleExpand: (pane: Exclude<ExpandedPane, null>) => void;
+  shortcut?: string;
 };
 
 function PaneHeader({
@@ -49,6 +52,7 @@ function PaneHeader({
   paneId,
   expandedPane,
   onToggleExpand,
+  shortcut,
 }: PaneHeaderProps) {
   const isExpanded = expandedPane === paneId;
   const label = isExpanded ? `Collapse ${title}` : `Expand ${title}`;
@@ -74,7 +78,16 @@ function PaneHeader({
             </button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={8}>
-            {label}
+            <div className="flex items-center gap-2">
+              <span>{label}</span>
+              {shortcut && (
+                <KbdGroup>
+                  {shortcut.split("+").map((key) => (
+                    <Kbd key={key}>{formatForDisplay(key)}</Kbd>
+                  ))}
+                </KbdGroup>
+              )}
+            </div>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -163,7 +176,9 @@ export function MarkdownWorkspace() {
   }, [clearMarkdown]);
 
   useEffect(() => {
-    editorRef.current?.layout();
+    if (desktopExpandedPane !== null) {
+      editorRef.current?.layout();
+    }
   }, [desktopExpandedPane]);
 
   const togglePaneExpansion = useCallback(
@@ -172,6 +187,14 @@ export function MarkdownWorkspace() {
     },
     [],
   );
+
+  useHotkey("Mod+E", () => {
+    togglePaneExpansion("editor");
+  });
+
+  useHotkey("Mod+Shift+P", () => {
+    togglePaneExpansion("preview");
+  });
 
   const handleDesktopLayoutChange = useCallback(() => {
     editorRef.current?.layout();
@@ -235,6 +258,7 @@ export function MarkdownWorkspace() {
           paneId="editor"
           expandedPane={desktopExpandedPane}
           onToggleExpand={togglePaneExpansion}
+          shortcut="Mod+E"
         />
         <div className="flex-1 min-h-0">
           <MarkdownEditor
@@ -269,6 +293,7 @@ export function MarkdownWorkspace() {
           paneId="preview"
           expandedPane={desktopExpandedPane}
           onToggleExpand={togglePaneExpansion}
+          shortcut="Mod+Shift+P"
         />
         <MarkdownPreview
           content={markdownContent}
