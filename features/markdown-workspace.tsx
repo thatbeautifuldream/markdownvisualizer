@@ -37,61 +37,53 @@ import { Kbd, KbdGroup } from "@/components/ui/kbd";
 type ExpandedPane = "editor" | "preview" | null;
 
 const workspacePaneClassName =
-  "flex h-full min-h-0 flex-col overflow-hidden rounded-lg border bg-background/95";
+  "relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border bg-background/95";
 
-type PaneHeaderProps = {
-  title: string;
+type PaneExpandButtonProps = {
   paneId: Exclude<ExpandedPane, null>;
   expandedPane: ExpandedPane;
   onToggleExpand: (pane: Exclude<ExpandedPane, null>) => void;
   shortcut?: string;
 };
 
-function PaneHeader({
-  title,
+function PaneExpandButton({
   paneId,
   expandedPane,
   onToggleExpand,
   shortcut,
-}: PaneHeaderProps) {
+}: PaneExpandButtonProps) {
   const isExpanded = expandedPane === paneId;
-  const label = isExpanded ? `Collapse ${title}` : `Expand ${title}`;
+  const paneLabel = paneId === "editor" ? "Editor" : "Preview";
+  const label = isExpanded
+    ? `Collapse ${paneLabel}`
+    : `Expand ${paneLabel}`;
 
   return (
-    <div className="flex items-center justify-between border-b px-4 py-2 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
-      <span>{title}</span>
-      <div className="flex items-center">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              aria-label={label}
-              title={label}
-              onClick={() => onToggleExpand(paneId)}
-              className="inline-flex size-6 cursor-pointer items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-              {isExpanded ? (
-                <Minimize2 size={14} />
-              ) : (
-                <Maximize2Icon size={14} />
-              )}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" sideOffset={8}>
-            <div className="flex items-center gap-2">
-              <span>{label}</span>
-              {shortcut && (
-                <KbdGroup>
-                  {shortcut.split("+").map((key) => (
-                    <Kbd key={key}>{formatForDisplay(key)}</Kbd>
-                  ))}
-                </KbdGroup>
-              )}
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={label}
+          title={label}
+          onClick={() => onToggleExpand(paneId)}
+          className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer items-center justify-center rounded-md border bg-background/90 text-muted-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          {isExpanded ? <Minimize2 size={14} /> : <Maximize2Icon size={14} />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" sideOffset={8}>
+        <div className="flex items-center gap-2">
+          <span>{label}</span>
+          {shortcut && (
+            <KbdGroup>
+              {shortcut.split("+").map((key) => (
+                <Kbd key={key}>{formatForDisplay(key)}</Kbd>
+              ))}
+            </KbdGroup>
+          )}
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -253,8 +245,7 @@ export function MarkdownWorkspace() {
         className={workspacePaneClassName}
         aria-label="Markdown editor"
       >
-        <PaneHeader
-          title="Editor"
+        <PaneExpandButton
           paneId="editor"
           expandedPane={desktopExpandedPane}
           onToggleExpand={togglePaneExpansion}
@@ -288,8 +279,7 @@ export function MarkdownWorkspace() {
         className={workspacePaneClassName}
         aria-label="Markdown preview"
       >
-        <PaneHeader
-          title="Preview"
+        <PaneExpandButton
           paneId="preview"
           expandedPane={desktopExpandedPane}
           onToggleExpand={togglePaneExpansion}
