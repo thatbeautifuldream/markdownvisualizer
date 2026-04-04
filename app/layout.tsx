@@ -5,7 +5,6 @@ import { ToasterProvider } from "@/components/providers/toaster-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HotkeysProvider } from "@/components/providers/hotkeys-provider";
 import { createMetadata } from "@/lib/metadata";
-import { cn } from "@/lib/utils";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -62,11 +61,7 @@ export default function RootLayout({
         <JsonLd data={softwareApplicationSchema} />
       </head>
       <body
-        className={cn(
-          `antialiased min-h-screen bg-background text-foreground`,
-          geist.className,
-          geistMono.variable,
-        )}
+        className={`${geist.className} ${geistMono.variable} antialiased min-h-dvh bg-background text-foreground`}
       >
         <ThemeProvider
           attribute="class"
@@ -76,7 +71,7 @@ export default function RootLayout({
         >
           <HotkeysProvider>
             <TooltipProvider>
-              <div className="h-full flex flex-col">{children}</div>
+              <div className="h-full flex flex-col isolate">{children}</div>
               <ToasterProvider />
             </TooltipProvider>
           </HotkeysProvider>

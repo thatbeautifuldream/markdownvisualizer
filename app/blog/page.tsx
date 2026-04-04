@@ -1,5 +1,6 @@
 import { allPages } from "content-collections";
 import Link from "next/link";
+import Image from "next/image";
 import { createMetadata } from "@/lib/metadata";
 import { JsonLd } from "@/components/json-ld";
 import { buttonVariants } from "@/components/ui/button";
@@ -72,19 +73,19 @@ export default async function BlogPage({
     <>
       <JsonLd data={blogSchema} />
 
-      <div className="py-10 sm:py-14">
-        <section className="pb-10 sm:pb-12">
-          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+      <div className="py-12 sm:py-16">
+        <header className="pb-12 sm:pb-14">
+          <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
             Blog
           </p>
-          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-2xl">
-              <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+          <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl sm:max-w-[30ch]">
                 {category
                   ? `${category.charAt(0).toUpperCase() + category.slice(1)} Articles`
                   : "Minimal notes on markdown and writing workflows."}
               </h1>
-              <p className="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
+              <p className="mt-5 text-base text-pretty text-muted-foreground sm:text-lg sm:max-w-[48ch]">
                 {category
                   ? `Showing ${filteredPages.length} ${filteredPages.length === 1 ? "post" : "posts"} in ${category}.`
                   : "Guides on markdown syntax, editor behavior, live preview, and the small UX decisions that make developer tools feel precise."}
@@ -95,18 +96,18 @@ export default async function BlogPage({
                 href="/blog"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "sm" }),
-                  "w-fit rounded-full border-0 shadow-none",
+                  "w-fit",
                 )}
               >
                 All posts
               </Link>
             ) : null}
           </div>
-        </section>
+        </header>
 
-        <section className="space-y-10 sm:space-y-12">
+        <section className="divide-y divide-border">
           {filteredPages.length === 0 ? (
-            <div className="py-16 text-center">
+            <div className="py-20 text-center">
               <p className="text-muted-foreground">
                 No posts found in this category.
               </p>
@@ -114,7 +115,7 @@ export default async function BlogPage({
                 href="/blog"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "sm" }),
-                  "mt-6 rounded-full border-0 shadow-none",
+                  "mt-8",
                 )}
               >
                 View all posts
@@ -124,39 +125,41 @@ export default async function BlogPage({
             posts.map((post) => (
               <article
                 key={post.id}
-                className="group grid gap-5 py-2 transition-colors sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-8"
+                className="group py-8 sm:grid sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-10"
               >
-                <div className="space-y-3 text-sm text-muted-foreground">
-                  <time dateTime={post.datetime} className="block">
+                <div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground sm:mb-0 sm:flex-col sm:items-start sm:gap-3">
+                  <time dateTime={post.datetime}>
                     {post.date}
                   </time>
                   <Link
                     href={post.category.href}
-                    className="inline-flex rounded-full bg-muted/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors hover:bg-muted hover:text-foreground"
+                    className="inline-flex rounded-full bg-muted/50 px-3 py-1 text-sm font-medium hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                   >
                     {post.category.title}
                   </Link>
                 </div>
                 <div className="relative">
-                  <h2 className="text-2xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-foreground/75">
-                    <Link href={post.href}>
+                  <h2 className="text-xl font-semibold tracking-tight text-balance text-foreground group-hover:text-foreground/75 sm:text-2xl">
+                    <Link href={post.href} className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500">
                       <span className="absolute inset-0" />
                       {post.title}
                     </Link>
                   </h2>
-                  <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                  <p className="mt-3 text-sm text-pretty text-muted-foreground sm:text-base sm:max-w-[56ch]">
                     {post.description}
                   </p>
-                  <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
-                    <img
+                  <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
+                    <Image
                       alt={post.author.name}
                       src={post.author.imageUrl}
-                      className="size-6 rounded-full bg-muted/70"
+                      width={24}
+                      height={24}
+                      className="size-6 rounded-full bg-muted/70 outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10"
                     />
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <span>{post.author.name}</span>
-                      <span className="text-muted-foreground/60">/</span>
-                      <span>{post.author.role}</span>
+                      <span className="text-muted-foreground/50">/</span>
+                      <span className="text-muted-foreground/70">{post.author.role}</span>
                     </div>
                   </div>
                 </div>

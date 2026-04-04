@@ -4,11 +4,11 @@ import { BlogFooter } from "@/features/blog-footer";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-dvh bg-background flex flex-col isolate">
       <BlogHeader />
-      <div className="flex-1 mx-auto w-full max-w-4xl px-3 sm:px-6">
+      <main className="flex-1 mx-auto w-full max-w-4xl px-4 sm:px-6">
         {children}
-      </div>
+      </main>
       <BlogFooter />
     </div>
   );

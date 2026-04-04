@@ -37,7 +37,7 @@ import { Kbd, KbdGroup } from "@/components/ui/kbd";
 type ExpandedPane = "editor" | "preview" | null;
 
 const workspacePaneClassName =
-  "relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border bg-background/95";
+  "relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border bg-background";
 
 type PaneExpandButtonProps = {
   paneId: Exclude<ExpandedPane, null>;
@@ -61,12 +61,12 @@ function PaneExpandButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
+          <button
           type="button"
           aria-label={label}
           title={label}
           onClick={() => onToggleExpand(paneId)}
-          className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer items-center justify-center rounded-md border bg-background/90 text-muted-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+          className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer items-center justify-center rounded-md border bg-muted/80 backdrop-blur-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
         >
           {isExpanded ? <Minimize2 size={14} /> : <Maximize2Icon size={14} />}
         </button>
@@ -198,7 +198,7 @@ export function MarkdownWorkspace() {
         id: "editor",
         label: "Editor",
         content: (
-          <div className="border flex flex-col h-full">
+          <div className="border flex flex-col h-full rounded-lg overflow-hidden">
             <div className="flex-1 min-h-0">
               <MarkdownEditor
                 value={markdownContent}
@@ -324,13 +324,13 @@ export function MarkdownWorkspace() {
   ]);
 
   return (
-    <div className="flex h-screen flex-col [container-type:inline-size]">
+    <div className="flex h-screen flex-col [container-type:inline-size] isolate">
       <WorkspaceHeader
         tabs={isMobile ? tabs : undefined}
         activeTab={isMobile ? activeTab : undefined}
         onTabChange={isMobile ? setActiveTab : undefined}
         leftActions={
-          <span className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground [@container(max-width:767px)]:hidden">
+          <span className="text-sm font-medium tracking-wide text-muted-foreground [@container(max-width:767px)]:hidden">
             Markdown Visualizer
           </span>
         }

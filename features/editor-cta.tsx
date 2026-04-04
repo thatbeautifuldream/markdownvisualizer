@@ -4,25 +4,22 @@ import { cn } from "@/lib/utils";
 
 export function EditorCta() {
   return (
-    <section className="mt-12 rounded-lg border bg-muted/20 px-6 py-8 sm:px-8">
-      <div className="max-w-2xl">
-        <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+    <section className="mt-16 rounded-lg border bg-muted/30 p-6 sm:p-8">
+      <div>
+        <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
           Practice
         </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        <h2 className="mt-4 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           Try it in the editor.
         </h2>
-        <p className="mt-4 text-base leading-7 text-muted-foreground">
+        <p className="mt-4 text-base text-pretty text-muted-foreground sm:max-w-[48ch]">
           Open Markdown Visualizer and test the ideas from this article in a
           live editor with instant preview.
         </p>
-        <div className="mt-6">
+        <div className="mt-8">
           <Link
             href="/"
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "rounded-full bg-background shadow-none",
-            )}
+            className={cn(buttonVariants())}
           >
             Open Editor
           </Link>

@@ -5,22 +5,23 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 
 export function BlogHeader() {
   return (
-    <header className="bg-background">
-      <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-3 py-1 sm:px-6">
-        <div className="flex items-center gap-4">
+    <header className="border-b border-border">
+      <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
+        <nav className="flex items-center gap-6">
           <Link
             href="/"
-            className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
+            aria-label="Homepage"
+            className="text-sm font-medium text-foreground hover:text-foreground/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           >
             Markdown Visualizer
           </Link>
           <Link
             href="/blog"
-            className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           >
             Blog
           </Link>
-        </div>
+        </nav>
         <ThemeSwitcher />
       </div>
     </header>

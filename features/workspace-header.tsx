@@ -28,13 +28,13 @@ export function WorkspaceHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between border-b flex-shrink-0 text-xs",
+        "flex items-center justify-between border-b flex-shrink-0",
         "border-border",
         className,
       )}
     >
       <div className="flex items-center gap-2">
-        {leftActions && <div className="px-3 py-1">{leftActions}</div>}
+        {leftActions && <div className="px-3 py-2">{leftActions}</div>}
         {tabs && tabs.length > 0 && (
           <div
             role="tablist"
@@ -88,26 +88,20 @@ export function WorkspaceHeader({
                     tab.content ? `workspace-tabpanel-${tab.id}` : undefined
                   }
                   className={cn(
-                    "relative px-4 py-2 cursor-pointer select-none text-xs font-medium",
-                    "transition-all duration-150 ease-in-out",
-                    "min-w-0 flex items-center gap-2 h-8",
-                    "border border-transparent border-r-border/50",
+                    "relative px-4 py-2 cursor-pointer select-none text-sm font-medium",
+                    "min-w-0 flex items-center gap-2 h-10",
+                    "border-r border-border/50 last:border-r-0",
+                    "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-500",
                     selected
                       ? cn(
                           "bg-background text-foreground",
-                          "border-b-transparent",
-                          "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0",
-                          "before:h-0.5 before:bg-primary",
+                          "border-b-2 border-b-foreground",
                         )
                       : cn(
-                          "bg-muted/30 text-muted-foreground hover:bg-muted/60",
-                          "hover:text-foreground/80",
-                          "hover:after:content-[''] hover:after:absolute hover:after:inset-0",
-                          "hover:after:border hover:after:border-dashed hover:after:border-primary",
-                          "hover:after:pointer-events-none",
+                          "bg-muted/40 text-muted-foreground",
+                          "hover:bg-muted/70 hover:text-foreground",
                         ),
                   )}
-                  style={{ outline: selected ? undefined : "none" }}
                   onClick={() => onTabChange?.(tab.id)}
                   type="button"
                 >
@@ -118,7 +112,7 @@ export function WorkspaceHeader({
           </div>
         )}
       </div>
-      <div className="flex items-center gap-2 px-3 py-1">
+      <div className="flex items-center px-3 py-2">
         <div className="flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
           {actions}
         </div>

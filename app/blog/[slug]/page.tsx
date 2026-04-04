@@ -1,6 +1,7 @@
 import { allPages } from "content-collections";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { StreamdownWrapper } from "@/components/streamdown-wrapper";
 import { createMetadata } from "@/lib/metadata";
 import { JsonLd } from "@/components/json-ld";
@@ -47,7 +48,7 @@ function formatDate(dateString: string): string {
   });
 }
 
-export default async function BlogPage({
+export default async function BlogArticlePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -77,57 +78,55 @@ export default async function BlogPage({
     <>
       <JsonLd data={articleSchema} />
 
-      <div className="py-10 sm:py-14">
-        <article className="pb-12">
-          <header className="pb-10 sm:pb-12">
+      <article className="py-12 sm:py-16">
+        <header className="pb-12 sm:pb-14">
+          <Link
+            href="/blog"
+            className="inline-flex text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+          >
+            Back to blog
+          </Link>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <Link
-              href="/blog"
-              className="inline-flex text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
+              href={`/blog?category=${page.category.toLowerCase()}`}
+              className="inline-flex rounded-full bg-muted/50 px-3 py-1 text-sm font-medium hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
             >
-              Back to blog
+              {page.category}
             </Link>
-
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-              <Link
-                href={`/blog?category=${page.category.toLowerCase()}`}
-                className="inline-flex rounded-full bg-muted/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors hover:bg-muted hover:text-foreground"
-              >
-                {page.category}
-              </Link>
-              <span className="hidden sm:inline">/</span>
-              <time dateTime={page.date}>{formatDate(page.date)}</time>
-            </div>
-
-            <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-              {page.title}
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-              {page.description}
-            </p>
-
-            <div className="mt-8 flex items-center gap-2 text-xs text-muted-foreground">
-              <img
-                alt={author.name}
-                src={author.imageUrl}
-                className="size-6 rounded-full bg-muted/70"
-              />
-              <div className="flex items-center gap-1.5">
-                <span>{author.name}</span>
-                <span className="text-muted-foreground/60">/</span>
-                <span>{author.role}</span>
-              </div>
-            </div>
-          </header>
-
-          <div className="mt-10 bg-background px-0 py-2">
-            <div className="prose prose-gray max-w-none dark:prose-invert">
-              <StreamdownWrapper content={page.content} />
-            </div>
+            <span className="hidden sm:inline text-muted-foreground/50">/</span>
+            <time dateTime={page.date}>{formatDate(page.date)}</time>
           </div>
 
-          <EditorCta />
-        </article>
-      </div>
+          <h1 className="mt-8 text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl sm:max-w-[30ch]">
+            {page.title}
+          </h1>
+          <p className="mt-6 text-base text-pretty text-muted-foreground sm:text-lg sm:max-w-[48ch]">
+            {page.description}
+          </p>
+
+          <div className="mt-8 flex items-center gap-3 text-sm text-muted-foreground">
+            <Image
+              alt={author.name}
+              src={author.imageUrl}
+              width={24}
+              height={24}
+              className="size-6 rounded-full bg-muted/70 outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10"
+            />
+            <div className="flex items-center gap-2">
+              <span>{author.name}</span>
+              <span className="text-muted-foreground/50">/</span>
+              <span className="text-muted-foreground/70">{author.role}</span>
+            </div>
+          </div>
+        </header>
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-balance prose-p:text-pretty prose-a:text-foreground prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-foreground/80">
+          <StreamdownWrapper content={page.content} />
+        </div>
+
+        <EditorCta />
+      </article>
     </>
   );
 }
