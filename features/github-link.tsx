@@ -19,9 +19,10 @@ export function GitHubLink() {
             next: { revalidate: 86400 },
           },
         );
+        if (!response.ok) throw new Error(`GitHub API ${response.status}`);
         const json = await response.json();
         const count = json.stargazers_count;
-        setStarsCount(count);
+        setStarsCount(typeof count === "number" ? count : null);
       } catch {
         console.error("Failed to fetch GitHub stars");
       } finally {
