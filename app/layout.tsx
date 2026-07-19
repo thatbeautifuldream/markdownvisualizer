@@ -1,10 +1,12 @@
 import { JsonLd } from "@/components/json-ld";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
+import { ServiceWorkerProvider } from "@/components/providers/service-worker-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HotkeysProvider } from "@/components/providers/hotkeys-provider";
 import { createMetadata } from "@/lib/metadata";
+import type { Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -43,6 +45,13 @@ const softwareApplicationSchema = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+};
+
 export const metadata = createMetadata({
   title: "Markdown Visualizer - Free Online Markdown Editor with Live Preview",
   description:
@@ -77,6 +86,7 @@ export default function RootLayout({
           </HotkeysProvider>
         </ThemeProvider>
         <AnalyticsProvider />
+        <ServiceWorkerProvider />
       </body>
     </html>
   );

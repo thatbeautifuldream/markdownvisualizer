@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="0.3" cy="0.2" r="1.1">
+      <stop offset="0" stop-color="#232326"/>
+      <stop offset="0.55" stop-color="#141416"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </radialGradient>
+    <linearGradient id="glyph" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fafafa"/>
+      <stop offset="1" stop-color="#c9c9cf"/>
+    </linearGradient>
+    <linearGradient id="arrow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff8a3d"/>
+      <stop offset="1" stop-color="#e8590c"/>
+    </linearGradient>
+    <clipPath id="shape">
+      <rect width="512" height="512" rx="115"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#shape)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+  </g>
+  <rect x="1" y="1" width="510" height="510" rx="114" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="2"/>
+  <path d="M 102 344 L 102 168 L 180 262 L 258 168 L 258 344" fill="none" stroke="url(#glyph)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 356 176 L 356 322 M 300 268 L 356 330 L 412 268" fill="none" stroke="url(#arrow)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
