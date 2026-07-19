@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { BlogHeader } from "@/features/blog-header";
-import { BlogFooter } from "@/features/blog-footer";
+import { BlogHeader } from "@/features/blog/blog-header";
+import { BlogFooter } from "@/features/blog/blog-footer";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

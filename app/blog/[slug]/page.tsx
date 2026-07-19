@@ -5,7 +5,7 @@ import Image from "next/image";
 import { StreamdownWrapper } from "@/components/streamdown-wrapper";
 import { createMetadata } from "@/lib/metadata";
 import { JsonLd } from "@/components/json-ld";
-import { EditorCta } from "@/features/editor-cta";
+import { EditorCta } from "@/features/blog/editor-cta";
 
 export async function generateStaticParams() {
   return allPages.map((page) => ({

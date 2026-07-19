@@ -1,4 +1,4 @@
-import { MarkdownWorkspace } from "@/features/markdown-workspace";
+import { MarkdownWorkspace } from "@/features/workspace/markdown-workspace";
 
 export default function Page() {
   return (

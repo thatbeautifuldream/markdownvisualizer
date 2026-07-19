@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { create } from "zustand";
 import { indexedDBService } from "@/lib/markdown-storage-service";
 
@@ -24,6 +25,17 @@ export type TMarkdownStore = {
 
 const statsCache = new Map<string, TMarkdownStats>();
 
+const persistTab = (
+  action: (tabId: string) => Promise<void>,
+  errorMessage: string,
+) => {
+  if (typeof window === "undefined") return;
+  void indexedDBService
+    .getOrCreateTabId()
+    .then(action)
+    .catch(() => toast.error(errorMessage));
+};
+
 export const useMarkdownStore = create<TMarkdownStore>((set, get) => ({
   markdownContent: "",
 
@@ -35,31 +47,19 @@ export const useMarkdownStore = create<TMarkdownStore>((set, get) => ({
   saveMarkdown: (content: string) => {
     set({ markdownContent: content });
     statsCache.clear();
-    if (typeof window === "undefined") return;
-
-    void (async () => {
-      try {
-        const tabId = await indexedDBService.getOrCreateTabId();
-        await indexedDBService.saveTabState(tabId, content);
-      } catch (error) {
-        console.error("Failed to save markdown content to IndexedDB", error);
-      }
-    })();
+    persistTab(
+      (tabId) => indexedDBService.saveTabState(tabId, content),
+      "Failed to save your markdown for offline use",
+    );
   },
 
   clearMarkdown: () => {
     set({ markdownContent: "" });
     statsCache.clear();
-    if (typeof window === "undefined") return;
-
-    void (async () => {
-      try {
-        const tabId = await indexedDBService.getOrCreateTabId();
-        await indexedDBService.deleteTabState(tabId);
-      } catch (error) {
-        console.error("Failed to clear markdown content from IndexedDB", error);
-      }
-    })();
+    persistTab(
+      (tabId) => indexedDBService.deleteTabState(tabId),
+      "Failed to clear saved markdown",
+    );
   },
 
   loadFromIndexedDB: async () => {
