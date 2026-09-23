@@ -21,7 +21,7 @@ const ToolbarButton = ({
 }) => (
   <Button
     onClick={onClick}
-    className="text-sm relative"
+    className="relative h-auto p-0 has-[>svg]:p-0"
     disabled={disabled}
     size="sm"
     variant="ghost"
@@ -41,7 +41,7 @@ export function EditorToolbar({
 }: TEditorToolbarProps) {
   if (!isVisible) return null;
   return (
-    <div className={`flex flex-wrap items-center gap-1 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-4 ${className}`}>
       <ToolbarButton onClick={onCopy} disabled={!hasContent}>
         Copy
       </ToolbarButton>

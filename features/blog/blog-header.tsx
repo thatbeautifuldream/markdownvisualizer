@@ -1,29 +1,15 @@
-"use client";
-
 import Link from "next/link";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Undo2 } from "lucide-react";
 
-export function BlogHeader() {
+export function BlogHeader({ href, label }: { href: string; label: string }) {
   return (
-    <header className="border-b border-border">
-      <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
-        <nav className="flex items-center gap-6">
-          <Link
-            href="/"
-            aria-label="Homepage"
-            className="text-sm font-medium text-foreground hover:text-foreground/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-          >
-            Markdown Visualizer
-          </Link>
-          <Link
-            href="/blog"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-          >
-            Blog
-          </Link>
-        </nav>
-        <ThemeSwitcher />
-      </div>
-    </header>
+    <Link
+      href={href}
+      data-back-link
+      className="text-faint hover:text-foreground relative z-20 inline-flex w-fit items-center gap-1.5 no-underline xl:fixed xl:top-20 xl:left-20"
+    >
+      <Undo2 className="size-5 shrink-0 sm:size-4" />
+      {label}
+    </Link>
   );
 }

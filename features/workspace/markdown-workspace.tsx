@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { Maximize2Icon, Minimize2 } from "lucide-react";
 import { useHotkey, formatForDisplay } from "@tanstack/react-hotkeys";
@@ -17,7 +18,6 @@ import { WorkspaceHeader } from "./workspace-header";
 import { EditorToolbar } from "../editor/editor-toolbar";
 import { MarkdownEditor } from "../editor/markdown-editor";
 import { MarkdownPreview } from "../editor/markdown-preview";
-import { StatusBar } from "./status-bar";
 import { useMarkdownStore } from "@/stores/markdown-document-store";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { GitHubLink } from "./github-link";
@@ -66,7 +66,7 @@ function PaneExpandButton({
           aria-label={label}
           title={label}
           onClick={() => onToggleExpand(paneId)}
-          className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer items-center justify-center rounded-md border bg-muted/80 backdrop-blur-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+          className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer items-center justify-center rounded-md bg-background/80 backdrop-blur-sm text-faint hover:text-foreground"
         >
           {isExpanded ? <Minimize2 size={14} /> : <Maximize2Icon size={14} />}
         </button>
@@ -92,14 +92,12 @@ export function MarkdownWorkspace() {
   const [expandedPane, setExpandedPane] = useState<ExpandedPane>(null);
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
-  const statusBarRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
-  const { theme: appTheme } = useTheme();
-  const editorTheme = appTheme === "dark" ? "hc-black" : "light";
+  const { resolvedTheme } = useTheme();
+  const editorTheme = resolvedTheme === "dark" ? "mdv-dark" : "mdv-light";
   const desktopExpandedPane = isMobile ? null : expandedPane;
 
-  const stats = useMarkdownStore((state) => state.getStats());
   const hasContent = useMarkdownStore((state) => state.hasContent());
   const markdownContent = useMarkdownStore((state) => state.markdownContent);
   const saveMarkdown = useMarkdownStore((state) => state.saveMarkdown);
@@ -198,7 +196,7 @@ export function MarkdownWorkspace() {
         id: "editor",
         label: "Editor",
         content: (
-          <div className="border flex flex-col h-full rounded-lg overflow-hidden">
+          <div className="flex flex-col h-full overflow-hidden">
             <div className="flex-1 min-h-0">
               <MarkdownEditor
                 value={markdownContent}
@@ -207,11 +205,6 @@ export function MarkdownWorkspace() {
                 theme={editorTheme}
               />
             </div>
-            <StatusBar
-              ref={statusBarRef}
-              stats={stats}
-              hasContent={hasContent}
-            />
           </div>
         ),
       },
@@ -231,8 +224,6 @@ export function MarkdownWorkspace() {
     handleEditorChange,
     handleEditorDidMount,
     editorTheme,
-    stats,
-    hasContent,
   ]);
 
   const activeTabContent = useMemo(() => {
@@ -259,7 +250,6 @@ export function MarkdownWorkspace() {
             theme={editorTheme}
           />
         </div>
-        <StatusBar ref={statusBarRef} stats={stats} hasContent={hasContent} />
       </section>
     );
   }, [
@@ -267,8 +257,6 @@ export function MarkdownWorkspace() {
     handleEditorChange,
     handleEditorDidMount,
     editorTheme,
-    stats,
-    hasContent,
     desktopExpandedPane,
     togglePaneExpansion,
   ]);
@@ -324,18 +312,21 @@ export function MarkdownWorkspace() {
   ]);
 
   return (
-    <div className="flex h-screen flex-col [container-type:inline-size] isolate">
+    <div className="flex h-dvh flex-col [container-type:inline-size] isolate">
       <WorkspaceHeader
         tabs={isMobile ? tabs : undefined}
         activeTab={isMobile ? activeTab : undefined}
         onTabChange={isMobile ? setActiveTab : undefined}
         leftActions={
-          <span className="text-sm font-medium tracking-wide text-muted-foreground [@container(max-width:767px)]:hidden">
-            Markdown Visualizer
-          </span>
+          <div className="flex items-center gap-4 [@container(max-width:767px)]:hidden">
+            <span className="font-medium">Markdown Visualizer</span>
+            <Link href="/blog" className="text-faint hover:text-foreground no-underline">
+              Blog
+            </Link>
+          </div>
         }
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <EditorToolbar
               onCopy={copyToClipboard}
               onClear={clearEditor}

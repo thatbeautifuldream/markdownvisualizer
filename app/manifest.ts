@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Write and preview Markdown in real-time with live preview and syntax highlighting.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0a0a",
-    theme_color: "#0a0a0a",
+    background_color: "#111111",
+    theme_color: "#111111",
     icons: [
       {
         src: "/icon.svg",

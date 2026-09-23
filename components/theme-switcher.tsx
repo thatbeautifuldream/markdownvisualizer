@@ -1,110 +1,52 @@
-'use client';
+"use client";
 
-import { useControllableState } from '@radix-ui/react-use-controllable-state';
-import { Moon, Sun } from 'lucide-react';
-import { motion } from 'motion/react';
-import { useCallback, useSyncExternalStore } from 'react';
-import { useTheme } from 'next-themes';
-import { cn } from '@/lib/utils';
+import { useHotkey } from "@tanstack/react-hotkeys";
+import { useTheme } from "next-themes";
+import { useRef } from "react";
+import { flushSync } from "react-dom";
+import { cn } from "@/lib/utils";
 
-const themes = [
-    {
-        key: 'light',
-        icon: Sun,
-        label: 'Light theme',
-    },
-    {
-        key: 'dark',
-        icon: Moon,
-        label: 'Dark theme',
-    },
-];
+export function ThemeSwitcher({ className }: { className?: string }) {
+  const { setTheme } = useTheme();
+  const activeTransition = useRef<ViewTransition | null>(null);
 
-type TThemeSwitcherProps = {
-    value?: 'light' | 'dark';
-    onChange?: (theme: 'light' | 'dark') => void;
-    defaultValue?: 'light' | 'dark';
-    className?: string;
-};
+  const toggle = () => {
+    const root = document.documentElement;
+    const next = root.classList.contains("dark") ? "light" : "dark";
+    const apply = () => {
+      root.classList.toggle("dark", next === "dark");
+      flushSync(() => setTheme(next));
+    };
 
-const emptySubscribe = () => () => {};
-
-export const ThemeSwitcher = ({
-    value,
-    onChange,
-    defaultValue = 'dark',
-    className,
-}: TThemeSwitcherProps) => {
-    const { theme: currentTheme, setTheme } = useTheme();
-    const [theme, setInternalTheme] = useControllableState({
-        defaultProp: defaultValue,
-        prop: value || (currentTheme as 'light' | 'dark'),
-        onChange: (newTheme) => {
-            setTheme(newTheme);
-            onChange?.(newTheme);
-        },
-    });
-    
-    const mounted = useSyncExternalStore(
-        emptySubscribe,
-        () => true,
-        () => false,
-    );
-
-    const handleThemeClick = useCallback(
-        (themeKey: 'light' | 'dark') => {
-            setInternalTheme(themeKey);
-        },
-        [setInternalTheme]
-    );
-
-    if (!mounted) {
-        return (
-            <div
-                className={cn(
-                    'relative isolate flex h-8 rounded-full bg-muted/50 p-1 ring-1 ring-black/5 dark:ring-white/10',
-                    className
-                )}
-            >
-                <div className="h-6 w-6" />
-                <div className="h-6 w-6" />
-            </div>
-        );
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!document.startViewTransition || reduced) {
+      apply();
+      return;
     }
 
-    return (
-        <div
-            className={cn(
-                'relative isolate flex h-8 rounded-full bg-muted/50 p-1 ring-1 ring-black/5 dark:ring-white/10',
-                className
-            )}
-        >
-            {themes.map(({ key, icon: Icon, label }) => {
-                const isActive = theme === key;
-                return (
-                    <button
-                        aria-label={label}
-                        className="relative h-6 w-6 rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                        key={key}
-                        onClick={() => handleThemeClick(key as 'light' | 'dark')}
-                        type="button"
-                    >
-                        {isActive && (
-                            <motion.div
-                                className="absolute inset-0 rounded-full bg-background ring-1 ring-black/5 dark:ring-white/10"
-                                layoutId="activeTheme"
-                                transition={{ type: 'spring', duration: 0.5 }}
-                            />
-                        )}
-                        <Icon
-                            className={cn(
-                                'relative z-10 m-auto size-4 shrink-0',
-                                isActive ? 'text-foreground' : 'text-muted-foreground'
-                            )}
-                        />
-                    </button>
-                );
-            })}
-        </div>
-    );
-};
+    root.classList.add("theme-transition");
+    const transition = document.startViewTransition(apply);
+    activeTransition.current = transition;
+    // A rapid second toggle skips this transition while the new one is still
+    // running — only the latest transition may clean up the class.
+    transition.finished.finally(() => {
+      if (activeTransition.current === transition) {
+        activeTransition.current = null;
+        root.classList.remove("theme-transition");
+      }
+    });
+  };
+
+  useHotkey("Mod+D", toggle);
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      className={cn("text-faint hover:text-foreground cursor-pointer", className)}
+    >
+      <span className="dark:hidden">Dark mode</span>
+      <span className="not-dark:hidden">Light mode</span>
+    </button>
+  );
+}

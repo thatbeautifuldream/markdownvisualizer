@@ -28,7 +28,7 @@ export function WorkspaceHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between border-b flex-shrink-0",
+        "flex items-center justify-between border-b shrink-0",
         "border-border",
         className,
       )}
@@ -88,19 +88,11 @@ export function WorkspaceHeader({
                     tab.content ? `workspace-tabpanel-${tab.id}` : undefined
                   }
                   className={cn(
-                    "relative px-4 py-2 cursor-pointer select-none text-sm font-medium",
-                    "min-w-0 flex items-center gap-2 h-10",
-                    "border-r border-border/50 last:border-r-0",
-                    "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-500",
+                    "relative px-4 py-2 cursor-pointer select-none",
+                    "min-w-0 flex items-center gap-2 h-10 border-b-2",
                     selected
-                      ? cn(
-                          "bg-background text-foreground",
-                          "border-b-2 border-b-foreground",
-                        )
-                      : cn(
-                          "bg-muted/40 text-muted-foreground",
-                          "hover:bg-muted/70 hover:text-foreground",
-                        ),
+                      ? "text-foreground border-b-foreground"
+                      : "text-faint border-b-transparent hover:text-foreground",
                   )}
                   onClick={() => onTabChange?.(tab.id)}
                   type="button"
@@ -113,7 +105,7 @@ export function WorkspaceHeader({
         )}
       </div>
       <div className="flex items-center px-3 py-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
+        <div className="flex flex-wrap items-center justify-between gap-2 shrink-0">
           {actions}
         </div>
       </div>
