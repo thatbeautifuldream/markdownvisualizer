@@ -87,7 +87,11 @@ function PaneExpandButton({
   );
 }
 
-export function MarkdownWorkspace() {
+export function MarkdownWorkspace({
+  initialContent,
+}: {
+  initialContent?: string;
+}) {
   const [activeTab, setActiveTab] = useState("editor");
   const [expandedPane, setExpandedPane] = useState<ExpandedPane>(null);
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -110,8 +114,12 @@ export function MarkdownWorkspace() {
   );
 
   useEffect(() => {
+    if (initialContent !== undefined) {
+      setMarkdownContent(initialContent);
+      return;
+    }
     void loadFromIndexedDB();
-  }, [loadFromIndexedDB]);
+  }, [initialContent, loadFromIndexedDB, setMarkdownContent]);
 
   useEffect(() => {
     if (editorRef.current && editorRef.current.getValue() !== markdownContent) {
