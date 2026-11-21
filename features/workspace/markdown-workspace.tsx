@@ -44,6 +44,7 @@ type PaneExpandButtonProps = {
   expandedPane: ExpandedPane;
   onToggleExpand: (pane: Exclude<ExpandedPane, null>) => void;
   shortcut?: string;
+  className?: string;
 };
 
 function PaneExpandButton({
@@ -51,6 +52,7 @@ function PaneExpandButton({
   expandedPane,
   onToggleExpand,
   shortcut,
+  className = "absolute right-3 top-3 z-20",
 }: PaneExpandButtonProps) {
   const isExpanded = expandedPane === paneId;
   const paneLabel = paneId === "editor" ? "Editor" : "Preview";
@@ -61,12 +63,12 @@ function PaneExpandButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-          <button
+        <button
           type="button"
           aria-label={label}
           title={label}
           onClick={() => onToggleExpand(paneId)}
-          className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer items-center justify-center rounded-md bg-background/80 backdrop-blur-sm text-faint hover:text-foreground"
+          className={`inline-flex size-7 cursor-pointer items-center justify-center rounded-md bg-background/80 backdrop-blur-sm text-faint hover:text-foreground ${className}`}
         >
           {isExpanded ? <Minimize2 size={14} /> : <Maximize2Icon size={14} />}
         </button>
@@ -222,7 +224,7 @@ export function MarkdownWorkspace({
         content: (
           <MarkdownPreview
             content={markdownContent}
-            className="w-full h-full px-4 py-4 md:p-6"
+            className="px-4 py-4 md:p-6"
           />
         ),
       },
@@ -275,15 +277,18 @@ export function MarkdownWorkspace({
         className={workspacePaneClassName}
         aria-label="Markdown preview"
       >
-        <PaneExpandButton
-          paneId="preview"
-          expandedPane={desktopExpandedPane}
-          onToggleExpand={togglePaneExpansion}
-          shortcut="Mod+Shift+P"
-        />
         <MarkdownPreview
           content={markdownContent}
-          className="flex-1 min-h-0 px-4 py-4 md:p-6"
+          className="px-4 py-4 md:p-6"
+          actions={
+            <PaneExpandButton
+              paneId="preview"
+              expandedPane={desktopExpandedPane}
+              onToggleExpand={togglePaneExpansion}
+              shortcut="Mod+Shift+P"
+              className=""
+            />
+          }
         />
       </section>
     );

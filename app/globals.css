@@ -522,3 +522,120 @@ html.theme-transition::view-transition-new(root) {
     transition: none !important;
   }
 }
+
+@page markdown-preview {
+  margin: 15mm;
+}
+
+@media print {
+  html:has([data-markdown-print]) {
+    page: markdown-preview;
+    color-scheme: light !important;
+    background: white;
+    --background: #fff;
+    --foreground: #111;
+    --muted: #f4f4f4;
+    --muted-foreground: #404040;
+    --faint: #555;
+    --border: #ccc;
+    --rule: #ccc;
+    --underline: #555;
+    --input: #ccc;
+  }
+
+  /* Keep only the preview and its ancestors in the page flow. */
+  :is(body, body *):has([data-markdown-print]) > :not([data-markdown-print], :has([data-markdown-print])) {
+    display: none !important;
+  }
+
+  body:has([data-markdown-print]),
+  body :has([data-markdown-print]),
+  [data-markdown-print] {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    container-type: normal;
+    border: 0;
+    padding: 0;
+  }
+
+  [data-markdown-print] {
+    overflow-wrap: anywhere;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+
+    & .prose {
+      font-size: 11pt;
+    }
+
+    & :is(h1, h2, h3, h4, h5, h6) {
+      break-after: avoid;
+    }
+
+    & :is(p, li) {
+      orphans: 3;
+      widows: 3;
+    }
+
+    & :is([data-streamdown="code-block"], [data-streamdown="code-block-body"], [data-streamdown="table-wrapper"], [data-streamdown="table-wrapper"] > div:has(> table), pre) {
+      display: block;
+      overflow: visible;
+      content-visibility: visible !important;
+    }
+
+    & :is(pre, pre code) {
+      white-space: pre-wrap;
+      background: transparent;
+      color: var(--foreground);
+    }
+
+    & pre code * {
+      color: inherit;
+      background: transparent;
+    }
+
+    & :is(button:not([data-streamdown="link"]), [data-streamdown$="-actions"], [data-streamdown="link-safety-modal"], [data-print-mermaid-source]) {
+      display: none;
+    }
+
+    & table {
+      table-layout: fixed;
+    }
+
+    & :is(td, th) {
+      padding: 4pt;
+      white-space: normal;
+    }
+
+    & :is(tr, img, [data-streamdown="mermaid-block"]) {
+      break-inside: avoid;
+    }
+
+    & img {
+      max-height: 200mm;
+      object-fit: contain;
+    }
+
+    & [data-streamdown="mermaid"] [role="application"] {
+      transform: none !important;
+    }
+
+    & [data-streamdown="mermaid"] svg {
+      max-width: 100%;
+      max-height: 200mm;
+    }
+
+    /* Streamdown renders Mermaid when its block scrolls into view. */
+    & [data-print-mermaid]:not(:has([data-streamdown="mermaid"] svg)) {
+      & > :not([data-print-mermaid-source]) {
+        display: none;
+      }
+
+      & > [data-print-mermaid-source] {
+        display: block;
+      }
+    }
+  }
+}
