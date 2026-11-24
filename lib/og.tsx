@@ -12,10 +12,19 @@ export async function ogImage({
   title: string;
   description: string;
 }) {
-  const [regular, medium] = await Promise.all(
-    ["Inter-400.ttf", "Inter-500.ttf"].map((file) =>
-      readFile(join(process.cwd(), "assets/fonts", file)),
-    ),
+  const faces = [
+    { name: "Allo", file: "allo-400.ttf", weight: 400 },
+    { name: "Allo", file: "allo-500.ttf", weight: 500 },
+    { name: "Noto Sans Devanagari", file: "noto-sans-devanagari-400.ttf", weight: 400 },
+    { name: "Noto Sans Devanagari", file: "noto-sans-devanagari-500.ttf", weight: 500 },
+  ] as const;
+  const fonts = await Promise.all(
+    faces.map(async ({ name, file, weight }) => ({
+      name,
+      weight,
+      style: "normal" as const,
+      data: await readFile(join(process.cwd(), "assets/fonts", file)),
+    })),
   );
 
   return new ImageResponse(
@@ -28,14 +37,14 @@ export async function ogImage({
           height: "100%",
           padding: 96,
           backgroundColor: "#fdfdfc",
-          fontFamily: "Inter",
+          fontFamily: "Allo, Noto Sans Devanagari",
           fontSize: 44,
           lineHeight: 1.35,
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 32, width: 912 }}>
           <div style={{ color: "#111111", fontWeight: 500 }}>{title}</div>
-          <div style={{ color: "rgb(152, 152, 151)", fontWeight: 400 }}>
+          <div style={{ color: "#595958", fontWeight: 400 }}>
             {description}
           </div>
         </div>
@@ -43,10 +52,7 @@ export async function ogImage({
     ),
     {
       ...ogSize,
-      fonts: [
-        { name: "Inter", data: regular, weight: 400, style: "normal" },
-        { name: "Inter", data: medium, weight: 500, style: "normal" },
-      ],
+      fonts,
     },
   );
 }

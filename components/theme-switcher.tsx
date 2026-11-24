@@ -52,7 +52,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
           type="button"
           onClick={toggle}
           className={cn(
-            "relative inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-faint hover:text-foreground",
+            "relative inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:text-foreground",
             className,
           )}
         >

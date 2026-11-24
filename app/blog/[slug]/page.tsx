@@ -78,12 +78,12 @@ export default async function BlogArticlePage({
 
       <main className="grid gap-10">
         <BlogHeader href="/blog" label="Blog" />
-        <article className="stagger grid min-w-0 gap-8">
+        <article className="grid min-w-0 gap-8">
           <PageHeader
             title={page.title}
             meta={`${page.category} · ${formatDate(page.date)}`}
           />
-          <StreamdownWrapper content={page.content} />
+          <StreamdownWrapper content={page.content} className="editorial-prose" />
         </article>
         <EditorCta />
       </main>

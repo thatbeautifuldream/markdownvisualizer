@@ -1,15 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./fonts.css";
 @source "../node_modules/streamdown/dist/*.js";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-sans--font-feature-settings:
-    "liga", "calt", "cv02", "cv03", "cv04", "cv11", "ss01", "ss03";
-  --font-mono:
-    "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  --font-sans: Allo, "Noto Sans Devanagari", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--code-font-family);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -37,44 +35,55 @@
   --radius-xl: calc(var(--radius) + 0.25rem);
 }
 @theme {
+  --font-weight-normal: 460;
   --font-weight-medium: 500;
   --font-weight-semibold: 560;
   --font-weight-bold: 600;
 }
 
 :root {
+  --palette-warm-white: #fdfdfc;
+  --palette-near-black: #111111;
+  --palette-black-rgb: 0 0 0;
+  --palette-white-rgb: 255 255 255;
+  --palette-blue-500: 0 122 255;
+  --palette-blue-400: 62 159 255;
+
+  --palette-red-light: #e5484d;
+  --palette-red-dark: #ff6369;
+  --code-font-family: "Google Sans Code", "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+
   color-scheme: light;
-  --background: #fdfdfc;
-  --foreground: #111111;
-  --muted: rgba(0, 0, 0, 0.04);
-  --muted-foreground: rgba(0, 0, 0, 0.65);
-  --faint: rgba(0, 0, 0, 0.4);
-  --accent: rgba(0, 0, 0, 0.06);
-  --border: rgba(0, 0, 0, 0.05);
-  --rule: rgba(0, 0, 0, 0.07);
-  --underline: rgba(0, 0, 0, 0.15);
-  --input: rgba(0, 0, 0, 0.1);
-  --ring: rgba(0, 122, 255, 0.5);
-  --destructive: #e5484d;
+  --background: var(--palette-warm-white);
+  --foreground: var(--palette-near-black);
+  --muted: rgb(var(--palette-black-rgb) / 4%);
+  --muted-foreground: color-mix(in srgb, rgb(var(--palette-black-rgb)) 65%, var(--background));
+  --faint: color-mix(in srgb, rgb(var(--palette-black-rgb)) 40%, var(--background));
+  --accent: rgb(var(--palette-black-rgb) / 6%);
+  --border: rgb(var(--palette-black-rgb) / 5%);
+  --rule: rgb(var(--palette-black-rgb) / 7%);
+  --underline: rgb(var(--palette-black-rgb) / 15%);
+  --input: rgb(var(--palette-black-rgb) / 10%);
+  --ring: rgb(var(--palette-blue-500) / 50%);
+  --destructive: var(--palette-red-light);
   --radius: 0.5rem;
 }
 
 .dark {
   color-scheme: dark;
-  --background: #111111;
-  --foreground: #fdfdfc;
-  --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: rgba(255, 255, 255, 0.65);
-  --faint: rgba(255, 255, 255, 0.42);
-  --accent: rgba(255, 255, 255, 0.08);
-  --border: rgba(255, 255, 255, 0.07);
-  --rule: rgba(255, 255, 255, 0.1);
-  --underline: rgba(255, 255, 255, 0.2);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: rgba(62, 159, 255, 0.6);
-  --destructive: #ff6369;
+  --destructive: var(--palette-red-dark);
+  --background: var(--palette-near-black);
+  --foreground: var(--palette-warm-white);
+  --muted: rgb(var(--palette-white-rgb) / 6%);
+  --muted-foreground: color-mix(in srgb, rgb(var(--palette-white-rgb)) 65%, var(--background));
+  --faint: color-mix(in srgb, rgb(var(--palette-white-rgb)) 42%, var(--background));
+  --accent: rgb(var(--palette-white-rgb) / 8%);
+  --border: rgb(var(--palette-white-rgb) / 7%);
+  --rule: rgb(var(--palette-white-rgb) / 10%);
+  --underline: rgb(var(--palette-white-rgb) / 20%);
+  --input: rgb(var(--palette-white-rgb) / 10%);
+  --ring: rgb(var(--palette-blue-400) / 60%);
 }
-
 
 html {
   background-color: var(--background);
@@ -101,60 +110,14 @@ html {
 }
 
 @utility section-title {
-  color: var(--color-faint);
+  color: var(--color-muted-foreground);
   padding-bottom: --spacing(2);
   border-bottom: 1px solid var(--color-border);
 }
 
-@utility index-list {
-  & a {
-    transition: opacity 140ms ease;
-  }
-  @media (hover: hover) and (min-width: 32.5rem) {
-    &:has(a:hover) a:not(:hover) {
-      opacity: 0.3;
-    }
-  }
-}
-
-@utility stagger {
-  @media (prefers-reduced-motion: no-preference) {
-    & > * {
-      animation: stagger-in 500ms ease both;
-    }
-    & > :nth-child(2) {
-      animation-delay: 50ms;
-    }
-    & > :nth-child(3) {
-      animation-delay: 100ms;
-    }
-    & > :nth-child(4) {
-      animation-delay: 150ms;
-    }
-    & > :nth-child(n + 5) {
-      animation-delay: 200ms;
-    }
-  }
-}
-
-@keyframes stagger-in {
-  from {
-    opacity: 0;
-    translate: 0 8px;
-  }
-}
-
-@view-transition {
-  navigation: auto;
-}
-
-/* transitions.dev — Theme wipe + page transition tokens. */
 :root {
   --wipe-dur: 900ms;
   --wipe-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --page-out-dur: 150ms;
-  --page-in-dur: 400ms;
-  --page-in-delay: 100ms;
 }
 
 /* Both wipe variants stack the still old snapshot under the incoming one. */
@@ -166,54 +129,6 @@ html::view-transition-old(root) {
 html::view-transition-new(root) {
   mix-blend-mode: normal;
   z-index: 2;
-}
-
-/* Page navigation: a quiet cross-blur — the old page blurs and fades out
-   fast, then the new one rises in softly. Gated on :not(.theme-transition)
-   so these rules can never match while a theme toggle's view transition is
-   running. */
-@keyframes page-out {
-  to {
-    opacity: 0;
-    filter: blur(2px);
-  }
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    filter: blur(3px);
-    transform: translateY(12px);
-  }
-}
-
-html:not(.theme-transition)::view-transition-old(root) {
-  animation: page-out var(--page-out-dur) ease-out both;
-}
-
-html:not(.theme-transition)::view-transition-new(root) {
-  animation: page-in var(--page-in-dur) var(--wipe-ease) var(--page-in-delay)
-    both;
-}
-
-/* The back link stays put across navigations: it gets its own snapshot that
-   swaps instantly instead of riding the page blur. Theme wipes drop the name
-   so the wipe sweeps it with the rest of the page. */
-[data-back-link] {
-  view-transition-name: back-link;
-}
-
-html.theme-transition [data-back-link] {
-  view-transition-name: none;
-}
-
-::view-transition-group(back-link),
-::view-transition-new(back-link) {
-  animation: none;
-}
-
-::view-transition-old(back-link) {
-  display: none;
 }
 
 /* Theme toggle (html.theme-transition, set by the footer toggle): the old
@@ -260,9 +175,6 @@ html.theme-transition::view-transition-new(root) {
 }
 
 @utility prose {
-  font-size: var(--text-base);
-  line-height: 1.75;
-
   & > * + * {
     margin-top: --spacing(4);
   }
@@ -335,7 +247,7 @@ html.theme-transition::view-transition-new(root) {
     list-style: decimal;
   }
   & :where(ol > li)::marker {
-    color: var(--color-faint);
+    color: var(--color-muted-foreground);
   }
   & :where(li) {
     position: relative;
@@ -352,7 +264,7 @@ html.theme-transition::view-transition-new(root) {
     width: 0.25rem;
     height: 0.25rem;
     border-radius: 50%;
-    background: var(--color-faint);
+    background: var(--color-muted-foreground);
   }
   & :where(blockquote) {
     position: relative;
@@ -369,7 +281,7 @@ html.theme-transition::view-transition-new(root) {
     background: var(--color-rule);
   }
   & :where(:not(pre) > code) {
-    font-family: var(--font-mono);
+    font-family: var(--code-font-family);
     font-size: 0.9em;
     color: var(--color-muted-foreground);
     background-color: var(--color-muted);
@@ -377,7 +289,7 @@ html.theme-transition::view-transition-new(root) {
     padding: 0.1rem 0.2rem;
   }
   & :where(pre) {
-    font-family: var(--font-mono);
+    font-family: var(--code-font-family);
     line-height: 1.55;
     border-radius: var(--radius-lg);
     padding: 0.875rem 1rem;
@@ -441,6 +353,13 @@ html.theme-transition::view-transition-new(root) {
   }
 }
 
+.editorial-prose :where(h1, h2, h3, h4, h5, h6) {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-weight: var(--font-weight-semibold);
+}
+
 @layer base {
   *,
   *::before,
@@ -450,22 +369,17 @@ html.theme-transition::view-transition-new(root) {
 
   * {
     @apply border-border;
-    scrollbar-width: none;
-  }
-
-  *::-webkit-scrollbar {
-    display: none;
   }
 
   html {
     @apply bg-background font-sans;
     font-optical-sizing: auto;
-    font-synthesis: none;
+    font-synthesis: style;
   }
 
   body {
     @apply bg-background text-foreground text-base/6 antialiased sm:text-sm/5;
-    font-weight: 400;
+    font-weight: var(--font-weight-normal);
     letter-spacing: -0.00563rem;
   }
 

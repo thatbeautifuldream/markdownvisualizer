@@ -7,7 +7,7 @@ import { GitHub } from "@/components/icons/github";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 const linkClassName =
-  "text-faint hover:text-foreground flex items-center gap-1.5 no-underline";
+  "text-muted-foreground hover:text-foreground flex items-center gap-1.5 no-underline";
 
 function parseStargazersCount(payload: unknown): number | null {
   if (!payload || typeof payload !== "object") return null;

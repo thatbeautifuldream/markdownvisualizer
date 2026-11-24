@@ -21,7 +21,7 @@ function defineThemes(monaco: Monaco) {
 			"editor.foreground": "#111111",
 			"editor.lineHighlightBackground": "#0000000a",
 			"editor.lineHighlightBorder": "#00000000",
-			"editorLineNumber.foreground": "#00000066",
+			"editorLineNumber.foreground": "#000000a6",
 			"editorLineNumber.activeForeground": "#111111",
 			"editor.selectionBackground": "#0000001a",
 			"editorIndentGuide.background1": "#0000000d",
@@ -36,7 +36,7 @@ function defineThemes(monaco: Monaco) {
 			"editor.foreground": "#fdfdfc",
 			"editor.lineHighlightBackground": "#ffffff0f",
 			"editor.lineHighlightBorder": "#00000000",
-			"editorLineNumber.foreground": "#ffffff6b",
+			"editorLineNumber.foreground": "#ffffffa6",
 			"editorLineNumber.activeForeground": "#fdfdfc",
 			"editor.selectionBackground": "#ffffff26",
 			"editorIndentGuide.background1": "#ffffff12",
@@ -60,11 +60,18 @@ export function MarkdownEditor({
 				theme={theme}
 				beforeMount={defineThemes}
 				onChange={onChange}
-				onMount={onMount}
+				onMount={(instance, monaco) => {
+					onMount(instance, monaco);
+					void document.fonts.load('14px "Google Sans Code"').then(
+						() => monaco.editor.remeasureFonts(),
+						() => undefined,
+					);
+				}}
 				options={{
 					minimap: { enabled: true },
-					fontSize: 12,
-					fontFamily: "var(--font-mono)",
+					fontSize: 14,
+					lineHeight: 20,
+					fontFamily: "var(--code-font-family)",
 					lineNumbers: "on",
 					roundedSelection: false,
 					scrollBeyondLastLine: false,

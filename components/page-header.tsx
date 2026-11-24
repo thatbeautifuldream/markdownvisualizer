@@ -10,7 +10,7 @@ export function PageHeader({
   return (
     <header className="grid gap-1">
       <h1 className="font-medium text-pretty">{title}</h1>
-      {meta && <p className="text-faint">{meta}</p>}
+      {meta && <p className="text-muted-foreground">{meta}</p>}
       {children}
     </header>
   );

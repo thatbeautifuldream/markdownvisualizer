@@ -7,25 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { HotkeysProvider } from "@/components/providers/hotkeys-provider";
 import { createMetadata } from "@/lib/metadata";
 import type { Viewport } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-
-const inter = localFont({
-  src: [
-    {
-      path: "../assets/fonts/InterVariable.woff2",
-      weight: "100 900",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/InterVariable-Italic.woff2",
-      weight: "100 900",
-      style: "italic",
-    },
-  ],
-  variable: "--font-inter",
-  display: "swap",
-});
 
 const softwareApplicationSchema = {
   "@context": "https://schema.org",
@@ -72,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
+    <html lang="en" className="antialiased" suppressHydrationWarning>
       <head>
         <JsonLd data={softwareApplicationSchema} />
       </head>

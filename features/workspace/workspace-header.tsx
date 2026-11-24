@@ -92,7 +92,7 @@ export function WorkspaceHeader({
                     "min-w-0 flex items-center gap-2 h-10 border-b-2",
                     selected
                       ? "text-foreground border-b-foreground"
-                      : "text-faint border-b-transparent hover:text-foreground",
+                      : "text-muted-foreground border-b-transparent hover:text-foreground",
                   )}
                   onClick={() => onTabChange?.(tab.id)}
                   type="button"

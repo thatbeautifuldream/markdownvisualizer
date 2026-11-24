@@ -48,6 +48,7 @@ self.addEventListener("fetch", (event) => {
 
   const isStatic =
     url.pathname.startsWith("/_next/static/") ||
+    url.pathname.startsWith("/fonts/") ||
     url.pathname.startsWith("/icon") ||
     url.pathname === "/manifest.webmanifest" ||
     url.pathname === "/favicon.ico";

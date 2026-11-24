@@ -12,7 +12,7 @@ export function BlogFooter() {
   return (
     <footer className="grid gap-9 pb-20">
       <div aria-hidden="true" className="bg-rule h-px w-12.5" />
-      <div className="text-faint grid gap-3">
+      <div className="text-muted-foreground grid gap-3">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <p>{siteConfig.name}</p>
           <ul role="list" className="flex items-center gap-x-4">

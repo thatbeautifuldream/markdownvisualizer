@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/page-header";
 
 export default function NotFound() {
   return (
-    <main className="stagger grid gap-12">
+    <main className="grid gap-12">
       <article className="grid gap-4">
         <PageHeader title="This article wandered off." meta="404" />
         <p className="text-pretty">

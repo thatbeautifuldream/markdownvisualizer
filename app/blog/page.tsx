@@ -44,14 +44,11 @@ export default async function BlogPage({
     <>
       <JsonLd data={blogSchema} />
 
-      <main className="stagger grid gap-12">
+      <main className="grid gap-12">
         <BlogHeader href={category ? "/blog" : "/"} label={category ? "Blog" : "Editor"} />
-        <PageHeader
-          title="Writing"
-          meta="Notes on markdown and writing workflows."
-        />
+        <PageHeader title="Markdown guides" />
         {groups.length === 0 ? (
-          <p className="text-faint">
+          <p className="text-muted-foreground">
             No posts in this category.{" "}
             <Link href="/blog">View all posts</Link>
           </p>
@@ -63,6 +60,7 @@ export default async function BlogPage({
               items={(items ?? []).map((page) => ({
                 href: `/blog/${page.slug}`,
                 title: page.title,
+                description: page.description,
               }))}
             />
           ))

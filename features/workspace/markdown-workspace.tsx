@@ -68,7 +68,7 @@ function PaneExpandButton({
           aria-label={label}
           title={label}
           onClick={() => onToggleExpand(paneId)}
-          className={`inline-flex size-7 cursor-pointer items-center justify-center rounded-md bg-background/80 backdrop-blur-sm text-faint hover:text-foreground ${className}`}
+          className={`inline-flex size-7 cursor-pointer items-center justify-center rounded-md bg-background/80 backdrop-blur-sm text-muted-foreground hover:text-foreground ${className}`}
         >
           {isExpanded ? <Minimize2 size={14} /> : <Maximize2Icon size={14} />}
         </button>
@@ -333,7 +333,7 @@ export function MarkdownWorkspace({
         leftActions={
           <div className="flex items-center gap-4 [@container(max-width:767px)]:hidden">
             <span className="font-medium">Markdown Visualizer</span>
-            <Link href="/blog" className="text-faint hover:text-foreground no-underline">
+            <Link href="/blog" className="text-muted-foreground hover:text-foreground no-underline">
               Blog
             </Link>
           </div>
